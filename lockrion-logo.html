@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<style>
+body {
+  background: #0B0F14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.logo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: #00E5FF;
+  position: relative;
+  z-index: 2;
+}
+
+.orbit {
+  position: absolute;
+  width: 260px;
+  height: 80px;
+  border: 2px solid #00E5FF;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  opacity: 0.75;
+  box-shadow: 0 0 10px #00E5FF;
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0% { opacity: 0.6; box-shadow: 0 0 8px #00E5FF; }
+  50% { opacity: 0.95; box-shadow: 0 0 16px #00E5FF; }
+  100% { opacity: 0.6; box-shadow: 0 0 8px #00E5FF; }
+}
+</style>
+</head>
+<body>
+
+<div class="logo-wrapper">
+  <div class="orbit"></div>
+  <div class="logo-text">LOCKRION</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lockrion — Documentation</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0B0F14;
+  --fg:#E6EDF3;
+  --muted:#9AA4B2;
+  --cyan:#00E5FF;
+  --cyan2:#00B8D4;
+  --indigo:#6C63FF;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  overflow-x:hidden;
+}
+
+.bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 20% 20%, rgba(0,229,255,0.12), transparent 60%),
+    radial-gradient(900px 500px at 80% 70%, rgba(108,99,255,0.12), transparent 60%);
+  opacity:0.95;
+}
+
+.stage{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:48px 24px 72px 24px;
+}
+
+.wrap{
+  width:min(920px, 100%);
+}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:24px;
+}
+
+.logo-mini{
+  width:220px;
+  height:74px;
+  border:0;
+  overflow:hidden;
+  display:block;
+}
+
+.nav{
+  display:flex;
+  gap:16px;
+  align-items:center;
+}
+
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition:0.18s ease;
+}
+
+.nav a:hover{
+  color:var(--fg);
+  border-bottom-color: rgba(0,229,255,0.35);
+}
+
+h1{
+  margin:0 0 10px 0;
+  font-size: clamp(28px, 3.8vw, 44px);
+  line-height:1.1;
+  font-weight:600;
+}
+
+.lead{
+  margin:0 0 24px 0;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:16px;
+  max-width: 860px;
+}
+
+.toc{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin: 0 0 26px 0;
+}
+
+.pill{
+  display:inline-block;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  color: var(--muted);
+  text-decoration:none;
+  transition:0.18s ease;
+}
+
+.pill:hover{
+  color: var(--fg);
+  border-color: rgba(0,229,255,0.25);
+}
+
+.section{
+  margin-top: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+h2{
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+h3{
+  margin: 18px 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+p{
+  margin: 0 0 12px 0;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+ul{
+  margin: 8px 0 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+li{ margin: 6px 0; }
+
+.k{
+  color: var(--fg);
+}
+
+hr{
+  border:0;
+  height:1px;
+  background: rgba(255,255,255,0.06);
+  margin: 18px 0;
+}
+
+.note{
+  margin-top:14px;
+  padding:14px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.08);
+  background: rgba(108,99,255,0.06);
+  color: var(--muted);
+}
+</style>
+</head>
+
+<body>
+<div class="bg"></div>
+
+<div class="stage">
+  <div class="wrap">
+
+    <div class="top">
+      <iframe class="logo-mini" src="lockrion-logo.html" scrolling="no"></iframe>
+      <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="how.html">How It Works</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+
+    <h1>Documentation</h1>
+    <p class="lead">
+      This page provides a professional overview of Lockrion’s execution model, architectural separation, and compliance posture.
+      It summarizes the strict implementation profile: fixed reserve, full pre-funding, immutable smart-contract execution, and deterministic settlement on Solana.
+    </p>
+
+    <div class="toc">
+      <a class="pill" href="#overview">Protocol Overview</a>
+      <a class="pill" href="#architecture">Architecture</a>
+      <a class="pill" href="#execution">Execution Model</a>
+      <a class="pill" href="#escrow">Escrow Model</a>
+      <a class="pill" href="#settlement">Settlement</a>
+      <a class="pill" href="#immutability">Immutability</a>
+      <a class="pill" href="#compliance">Compliance & Risk</a>
+      <a class="pill" href="#rct">RCT Basis</a>
+    </div>
+
+    <div class="section" id="overview">
+      <h2>Protocol Overview</h2>
+      <p>
+        Lockrion is a commercially governed deployment platform for autonomous, time-locked reserve issuances implemented as immutable smart contracts on Solana.
+        Governance exists only prior to deployment. After deployment, execution is controlled exclusively by on-chain logic.
+      </p>
+      <p>
+        Each issuance is an independent instance with immutable parameters, strict reserve funding requirements, deterministic accounting, and post-maturity settlement.
+        Issuances are structurally isolated and do not share escrow accounts or accounting state.
+      </p>
+      <div class="note">
+        Lockrion does not provide investment advice, does not guarantee yield, and does not manage participant assets after deployment.
+      </div>
+    </div>
+
+    <div class="section" id="architecture">
+      <h2>Architecture</h2>
+
+      <h3>Layer Separation</h3>
+      <ul>
+        <li><span class="k">Governance Layer (off-chain)</span>: issuer admission, parameter screening, fee determination, and deployment decisions prior to deployment only.</li>
+        <li><span class="k">Issuance Layer (on-chain)</span>: immutable execution, accounting, escrow control, and settlement after deployment.</li>
+        <li><span class="k">Interface Layer (UI)</span>: non-authoritative interface; users may interact directly with issuance contracts.</li>
+      </ul>
+
+      <h3>Issuance Independence</h3>
+      <ul>
+        <li>Each issuance maintains isolated state and isolated escrow accounts.</li>
+        <li>No pooled reserves exist.</li>
+        <li>Failure or inefficiency in one issuance does not affect others.</li>
+      </ul>
+    </div>
+
+    <div class="section" id="execution">
+      <h2>Execution Model</h2>
+
+      <h3>Immutable Parameters</h3>
+      <p>
+        Issuance parameters are fixed at deployment and cannot be modified.
+        The v1 profile includes fixed reward asset (USDC), fixed reserve_total, fixed start/maturity timestamps, and fixed claim window configuration.
+      </p>
+
+      <h3>Reserve Funding Gate</h3>
+      <p>
+        Participation is disabled until the reward reserve is fully funded on-chain.
+        Partial funding is rejected.
+        Funding must occur strictly prior to the participation window.
+      </p>
+
+      <h3>Time Window Rules</h3>
+      <p>
+        Deposits are permitted only during the participation window.
+        Deposits after maturity are rejected.
+        Withdrawals before maturity are prohibited by design.
+      </p>
+
+      <h3>Deterministic Accounting</h3>
+      <p>
+        Accounting and distribution are deterministic, integer-based, and reproducible.
+        No floating-point arithmetic is used.
+        Overflow/invalid states must fail transactions rather than produce ambiguous outcomes.
+      </p>
+    </div>
+
+    <div class="section" id="escrow">
+      <h2>Escrow Model</h2>
+
+      <h3>Deposit Escrow</h3>
+      <p>
+        Participant deposits are held in a dedicated deposit escrow account (lock asset).
+        Deposits remain isolated and are not used for reward funding.
+        Deposit release is permitted only by immutable post-maturity withdrawal logic.
+      </p>
+
+      <h3>Reward Escrow</h3>
+      <p>
+        The full USDC reward reserve is held in a dedicated reward escrow account.
+        The reserve cannot be increased after deployment.
+        Reward funds can move only through predefined claim/sweep/reclaim paths.
+      </p>
+
+      <h3>Non-Commingling Guarantee</h3>
+      <p>
+        Deposit escrow and reward escrow are strictly segregated.
+        No commingling is permitted under any circumstances.
+      </p>
+    </div>
+
+    <div class="section" id="settlement">
+      <h2>Settlement</h2>
+
+      <h3>Maturity Transition</h3>
+      <p>
+        At maturity, participation ends permanently.
+        No new deposits are accepted.
+        Accounting stops accumulating new participation weight beyond the defined window.
+      </p>
+
+      <h3>Claim Phase</h3>
+      <p>
+        Reward claiming is available within a predefined claim window after maturity.
+        Claims are computed deterministically and are bounded strictly by the fixed reserve.
+      </p>
+
+      <h3>Deposit Withdrawal</h3>
+      <p>
+        Deposits remain withdrawable after maturity.
+        Withdrawal is not dependent on reward claiming.
+      </p>
+
+      <h3>Unclaimed Reward Handling</h3>
+      <p>
+        Unclaimed rewards follow predefined immutable rules after claim window expiration.
+        This handling does not modify historical accounting and does not recalculate results.
+      </p>
+    </div>
+
+    <div class="section" id="immutability">
+      <h2>Immutability</h2>
+
+      <h3>Post-Deployment Finality</h3>
+      <ul>
+        <li>Program upgrade authority is revoked at deployment.</li>
+        <li>No administrative keys are retained for changing issuance behavior.</li>
+        <li>No pause, emergency override, or discretionary intervention mechanisms exist.</li>
+        <li>Parameters and execution logic remain immutable for the lifetime of the issuance.</li>
+      </ul>
+
+      <h3>Reproducibility</h3>
+      <p>
+        Outcomes are reproducible from public on-chain data.
+        Any observer can verify reserve funding, escrow balances, timestamps, and settlement outcomes.
+      </p>
+    </div>
+
+    <div class="section" id="compliance">
+      <h2>Compliance & Risk</h2>
+
+      <h3>Platform Role Limitation</h3>
+      <ul>
+        <li>Lockrion provides deployment infrastructure and a convenience interface.</li>
+        <li>Lockrion does not act as an asset manager, custodian, broker, or investment advisor.</li>
+        <li>Lockrion does not guarantee yield, profitability, or economic performance.</li>
+      </ul>
+
+      <h3>Participant Risk Allocation</h3>
+      <ul>
+        <li>Participants bear market, liquidity, volatility, and opportunity risks of the locked asset.</li>
+        <li>Reward outcomes are bounded strictly by the declared reserve and proportional rules.</li>
+        <li>Participation is voluntary and governed exclusively by public on-chain rules.</li>
+      </ul>
+
+      <h3>Issuer Risk Allocation</h3>
+      <ul>
+        <li>Issuers bear responsibility for fully funding the reward reserve prior to participation.</li>
+        <li>Issuers cannot access participant deposits and cannot modify the issuance after deployment.</li>
+        <li>Any reclaim/sweep paths are strictly predefined and are not discretionary.</li>
+      </ul>
+
+      <h3>Compensation Framework</h3>
+      <p>
+        Lockrion v1 does not implement on-chain compensation mechanisms.
+        Compensation, if any, is external, discretionary, and must not modify on-chain accounting, state, or results.
+      </p>
+    </div>
+
+    <div class="section" id="rct">
+      <h2>Reserve Commitment Theory (RCT) Basis</h2>
+      <p>
+        Lockrion implements Reserve Commitment Theory under a strict implementation profile intended to maximize predictability and eliminate discretionary behavior.
+        Issuances are fixed commitments with time-discrete accounting, bounded reserves, proportional deterministic distribution, and structural independence.
+      </p>
+
+      <h3>Constitutional Principles</h3>
+      <ul>
+        <li>Fixed Commitment</li>
+        <li>Reserve Non-Extractability</li>
+        <li>Absolute Issuance Immutability</li>
+        <li>Temporal Discreteness</li>
+        <li>Proportional Distribution</li>
+        <li>Issuance Independence</li>
+        <li>Reproducibility</li>
+        <li>Compensation Boundaries</li>
+      </ul>
+
+      <h3>Lockrion v1 Implementation Profile</h3>
+      <ul>
+        <li>Reward asset is fixed to USDC.</li>
+        <li>Reward reserve must be fully funded before participation begins.</li>
+        <li>Reserve increases are not permitted after deployment.</li>
+        <li>Settlement occurs through a post-maturity claim phase with a predefined claim window.</li>
+        <li>Arithmetic is deterministic, fixed-width, and integer-based.</li>
+        <li>No administrative or governance intervention is possible after deployment.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lockrion — How It Works</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0B0F14;
+  --fg:#E6EDF3;
+  --muted:#9AA4B2;
+  --cyan:#00E5FF;
+  --cyan2:#00B8D4;
+  --indigo:#6C63FF;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  overflow-x:hidden;
+}
+
+.bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 20% 20%, rgba(0,229,255,0.12), transparent 60%),
+    radial-gradient(900px 500px at 80% 70%, rgba(108,99,255,0.12), transparent 60%);
+  opacity:0.95;
+}
+
+.stage{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:48px 24px 72px 24px;
+}
+
+.wrap{
+  width:min(880px, 100%);
+}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:36px;
+}
+
+.logo-mini{
+  width:220px;
+  height:74px;
+  border:0;
+  overflow:hidden;
+  display:block;
+}
+
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
+  transition:0.18s ease;
+}
+
+.nav a:hover{
+  color:var(--fg);
+}
+
+.nav{
+  display:flex;
+  gap:24px;
+  align-items:center;
+}
+
+h1{
+  margin:0 0 18px 0;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height:1.1;
+  font-weight:600;
+}
+
+.lead{
+  margin:0 0 34px 0;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.7;
+}
+
+.section{
+  margin-top:30px;
+  padding:24px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px;
+}
+
+.section h2{
+  margin:0 0 14px 0;
+  font-size:20px;
+  font-weight:600;
+}
+
+.section p{
+  margin:0 0 14px 0;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:16px;
+}
+
+.highlight{
+  color:var(--fg);
+}
+</style>
+</head>
+
+<body>
+<div class="bg"></div>
+
+<div class="stage">
+  <div class="wrap">
+
+    <div class="top">
+      <iframe class="logo-mini" src="lockrion-logo.html" scrolling="no"></iframe>
+      <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="docs.html">Documentation</a>
+        <a href="contact.html">Contact</a>
+      </div>     
+    </div>
+
+    <h1>How Lockrion Works</h1>
+
+    <p class="lead">
+      Lockrion allows issuers to create transparent, time-locked reward programs on Solana.
+      Everything is fixed in advance. Nothing can be changed after launch.
+      The rules are executed automatically by smart contracts.
+    </p>
+
+    <div class="section">
+      <h2>The Reward Is Fixed</h2>
+      <p>
+        When an issuance is created, the total reward amount is defined in advance.
+        This amount never changes.
+      </p>
+      <p>
+        If the reserve is declared as 100,000 USDC, it will always remain exactly 100,000 USDC.
+        It cannot be increased or reduced after deployment.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>The Reward Must Be Fully Funded</h2>
+      <p>
+        Before anyone can participate, the full reward must already be locked on-chain.
+      </p>
+      <p>
+        If the reserve is not fully funded, participation is not possible.
+        There is no partial funding and no hidden adjustments.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Participation Is Time-Locked</h2>
+      <p>
+        Each issuance has a clearly defined start date and maturity date.
+      </p>
+      <p>
+        You can deposit only during that window.
+        Deposits after maturity are rejected.
+        Withdrawals before maturity are not allowed.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Distribution Is Automatic</h2>
+      <p>
+        Rewards are calculated automatically by the smart contract.
+        There are no manual decisions, no changes, and no governance votes.
+      </p>
+      <p>
+        The system follows predefined rules and executes them exactly as written.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>After Maturity</h2>
+      <p>
+        Once the maturity date is reached, participants can claim their rewards.
+        Deposits can be withdrawn according to the rules.
+      </p>
+      <p>
+        Unclaimed rewards follow predefined logic.
+        Nothing can be altered after deployment.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>No Hidden Control</h2>
+      <p>
+        After an issuance is deployed, no one can change its parameters.
+        There are no administrative keys and no emergency overrides.
+      </p>
+      <p>
+        The contract executes exactly as defined.
+        The outcome depends only on the declared rules and on-chain state.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
