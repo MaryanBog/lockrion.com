@@ -1,0 +1,23 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Secrets
+.env
+*.key
+*.pem
+
+# Node (если вдруг появится)
+node_modules/
+
+# Build / cache (если вдруг появится)
+dist/
+build/
+.cache/
