@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Issuances List</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0B0F14;
+  --fg:#E6EDF3;
+  --muted:#9AA4B2;
+  --cyan:#00E5FF;
+  --cyan2:#00B8D4;
+  --indigo:#6C63FF;
+  --card: rgba(255,255,255,0.035);
+  --card2: rgba(255,255,255,0.06);
+  --stroke: rgba(255,255,255,0.10);
+  --stroke2: rgba(108,99,255,0.45);
+  --ok: rgba(0,229,255,0.18);
+  --warn: rgba(255,193,7,0.18);
+  --bad: rgba(255,82,82,0.18);
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  background:transparent;
+  color:var(--fg);
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.wrap{
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 14px;
+}
+
+.header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom: 14px;
+}
+
+.h-title{
+  font-size: 16px;
+  font-weight: 600;
+  margin:0 0 6px 0;
+}
+.h-sub{
+  margin:0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 760px;
+}
+
+.search{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.search input{
+  width: 260px;
+  max-width: 40vw;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--stroke);
+  color: var(--fg);
+  outline: none;
+}
+.search input::placeholder{ color: rgba(154,164,178,0.75); }
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+}
+
+@media (max-width: 920px){
+  .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 620px){
+  .grid{ grid-template-columns: 1fr; }
+  .search input{ width: 100%; max-width: 100%; }
+  .header{ flex-direction:column; align-items:stretch; }
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 14px;
+  overflow:hidden;
+  position:relative;
+}
+
+.card:hover{
+  border-color: rgba(0,229,255,0.22);
+  background: rgba(255,255,255,0.045);
+}
+
+.topline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.badge{
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,0.02);
+  color: var(--muted);
+  user-select:none;
+  white-space:nowrap;
+}
+.badge.upcoming{ background: var(--warn); border-color: rgba(255,193,7,0.28); color: #FFE8A3; }
+.badge.active{ background: var(--ok); border-color: rgba(0,229,255,0.28); color: #BDF7FF; }
+.badge.claiming{ background: rgba(108,99,255,0.14); border-color: rgba(108,99,255,0.32); color: #D0CCFF; }
+.badge.closed{ background: var(--bad); border-color: rgba(255,82,82,0.30); color: #FFB6B6; }
+
+.idline{
+  font-size: 12px;
+  color: var(--muted);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width: 65%;
+}
+
+.kv{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+  margin-top: 10px;
+}
+
+.k{
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.v{
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.row{
+  margin-top: 12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor:pointer;
+  transition: 0.18s ease;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.03);
+  color: var(--fg);
+}
+
+.btn:hover{ background: rgba(255,255,255,0.06); }
+
+.btn-primary{
+  background: var(--cyan);
+  color: #061015;
+}
+.btn-primary:hover{ background: var(--cyan2); }
+
+.btn-outline{
+  background: rgba(108,99,255,0.06);
+  border-color: rgba(108,99,255,0.50);
+  color: #BEBBFF;
+}
+.btn-outline:hover{ background: rgba(108,99,255,0.12); }
+
+.btn:disabled{
+  opacity: 0.55;
+  cursor:not-allowed;
+}
+
+.details{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255,255,255,0.12);
+  display:none;
+}
+.details.open{ display:block; }
+
+.dline{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding: 6px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.dline code{
+  color: var(--fg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 3px 6px;
+  border-radius: 8px;
+  max-width: 64%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.empty{
+  display:none;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,0.03);
+  color: var(--muted);
+}
+
+/* modal */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding: 20px;
+  z-index:9999;
+}
+.modal{
+  width: min(520px, 100%);
+  background: rgba(10,14,20,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+}
+.modal h3{
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+.modal p{
+  margin: 0 0 12px 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.modal .mkv{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+.modal .mkv .mrow{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.modal .mkv code{
+  color: var(--fg);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 3px 6px;
+  border-radius: 8px;
+  max-width: 64%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.modal .actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div>
+      <p class="h-title">Issuances</p>
+      <p class="h-sub">
+        This page lists all reserve-backed issuances. Choose an issuance and deposit the required token during the Active window.
+        Rewards are distributed deterministically by the smart contract on Solana.
+      </p>
+    </div>
+
+    <div class="search">
+      <input id="q" type="text" placeholder="Search (token, status, id…)" />
+    </div>
+  </div>
+
+  <div id="empty" class="empty">No issuances match your search.</div>
+  <div id="grid" class="grid"></div>
+
+</div>
+
+<!-- Modal -->
+<div id="mb" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3 id="mtitle">Deposit</h3>
+    <p id="msub">Wallet deposit flow will be connected here (Phantom/Solflare + on-chain transaction).</p>
+    <div class="mkv" id="mkv"></div>
+    <div class="actions">
+      <button class="btn" id="mclose">Close</button>
+      <button class="btn btn-primary" id="msoon" disabled>Deposit (coming soon)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * Заглушки. Потом заменим на реальные данные:
+ * - либо загрузка issuances.json
+ * - либо чтение PDA аккаунтов через RPC
+ */
+const ISSUANCES = [
+  {
+    issuance_id: "8B5MJ619DV8WcxKLmU7fhXDkKbWK9e58RAJBURV4Pwfe",
+    status: "Upcoming",
+    lock_symbol: "LOCK",
+    reward_symbol: "USDC",
+    reserve_total: "1,000,000",
+    start: "2026-03-01 00:00 UTC",
+    maturity: "2026-03-31 00:00 UTC",
+    lock_mint: "LOCK_MINT_EXAMPLE_111111111111111111111111111111",
+    reward_mint: "USDC_MINT_EXAMPLE_222222222222222222222222222222",
+    deposit_escrow: "DEPOSIT_ESCROW_EXAMPLE_33333333333333333333333",
+    reward_escrow: "REWARD_ESCROW_EXAMPLE_444444444444444444444444",
+    platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
+  },
+  {
+    issuance_id: "9yQf8s7YxQj3vZrD4mK2p8pZx4g1VbY7h3mQn1a2b3c4",
+    status: "Active",
+    lock_symbol: "LOCK",
+    reward_symbol: "USDC",
+    reserve_total: "250,000",
+    start: "2026-02-20 00:00 UTC",
+    maturity: "2026-03-21 00:00 UTC",
+    lock_mint: "LOCK_MINT_EXAMPLE_555555555555555555555555555555",
+    reward_mint: "USDC_MINT_EXAMPLE_222222222222222222222222222222",
+    deposit_escrow: "DEPOSIT_ESCROW_EXAMPLE_66666666666666666666666",
+    reward_escrow: "REWARD_ESCROW_EXAMPLE_777777777777777777777777",
+    platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
+  },
+  {
+    issuance_id: "4mN2pQ7vXk9sT3aB5cD8eF1gH6jK2lM9nP4qR7sT8uV",
+    status: "Claiming",
+    lock_symbol: "LOCK",
+    reward_symbol: "USDC",
+    reserve_total: "75,000",
+    start: "2026-01-10 00:00 UTC",
+    maturity: "2026-02-09 00:00 UTC",
+    lock_mint: "LOCK_MINT_EXAMPLE_888888888888888888888888888888",
+    reward_mint: "USDC_MINT_EXAMPLE_222222222222222222222222222222",
+    deposit_escrow: "DEPOSIT_ESCROW_EXAMPLE_99999999999999999999999",
+    reward_escrow: "REWARD_ESCROW_EXAMPLE_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+    platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
+  }
+];
+
+const grid = document.getElementById("grid");
+const empty = document.getElementById("empty");
+const q = document.getElementById("q");
+
+function badgeClass(status){
+  const s = String(status || "").toLowerCase();
+  if (s === "upcoming") return "upcoming";
+  if (s === "active") return "active";
+  if (s === "claiming") return "claiming";
+  if (s === "closed") return "closed";
+  return "";
+}
+
+function canDeposit(status){
+  return String(status || "").toLowerCase() === "active";
+}
+
+function esc(s){ return String(s || ""); }
+
+function render(list){
+  grid.innerHTML = "";
+  if (!list.length){
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  for (const it of list){
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const top = document.createElement("div");
+    top.className = "topline";
+
+    const idline = document.createElement("div");
+    idline.className = "idline";
+    idline.title = it.issuance_id;
+    idline.textContent = it.issuance_id;
+
+    const badge = document.createElement("div");
+    badge.className = "badge " + badgeClass(it.status);
+    badge.textContent = it.status;
+
+    top.appendChild(idline);
+    top.appendChild(badge);
+
+    const kv = document.createElement("div");
+    kv.className = "kv";
+    kv.innerHTML = `
+      <div><div class="k">Deposit token</div><div class="v">${esc(it.lock_symbol)}</div></div>
+      <div><div class="k">Reward token</div><div class="v">${esc(it.reward_symbol)}</div></div>
+      <div><div class="k">Reserve total</div><div class="v">${esc(it.reserve_total)} ${esc(it.reward_symbol)}</div></div>
+      <div><div class="k">Maturity</div><div class="v">${esc(it.maturity)}</div></div>
+      <div><div class="k">Start</div><div class="v">${esc(it.start)}</div></div>
+      <div><div class="k">Network</div><div class="v">mainnet</div></div>
+    `;
+
+    const row = document.createElement("div");
+    row.className = "row";
+
+    const btnDetails = document.createElement("button");
+    btnDetails.className = "btn btn-outline";
+    btnDetails.textContent = "Details";
+
+    const btnDeposit = document.createElement("button");
+    btnDeposit.className = "btn btn-primary";
+    btnDeposit.textContent = canDeposit(it.status) ? "Deposit" : "Deposit";
+    btnDeposit.disabled = !canDeposit(it.status);
+    btnDeposit.title = canDeposit(it.status) ? "Deposit into this issuance" : "Deposit is available only when status = Active";
+
+    row.appendChild(btnDetails);
+    row.appendChild(btnDeposit);
+
+    const details = document.createElement("div");
+    details.className = "details";
+    details.innerHTML = `
+      <div class="dline"><span>Issuance PDA</span><code>${esc(it.issuance_id)}</code></div>
+      <div class="dline"><span>Lock mint</span><code>${esc(it.lock_mint)}</code></div>
+      <div class="dline"><span>Reward mint</span><code>${esc(it.reward_mint)}</code></div>
+      <div class="dline"><span>Deposit escrow</span><code>${esc(it.deposit_escrow)}</code></div>
+      <div class="dline"><span>Reward escrow</span><code>${esc(it.reward_escrow)}</code></div>
+      <div class="dline"><span>Platform treasury</span><code>${esc(it.platform_treasury)}</code></div>
+    `;
+
+    btnDetails.addEventListener("click", () => {
+      details.classList.toggle("open");
+    });
+
+    btnDeposit.addEventListener("click", () => openDepositModal(it));
+
+    card.appendChild(top);
+    card.appendChild(kv);
+    card.appendChild(row);
+    card.appendChild(details);
+
+    grid.appendChild(card);
+  }
+}
+
+function filterList(){
+  const s = (q.value || "").trim().toLowerCase();
+  if (!s) return ISSUANCES.slice();
+  return ISSUANCES.filter(it => {
+    const hay = [
+      it.issuance_id, it.status, it.lock_symbol, it.reward_symbol,
+      it.reserve_total, it.start, it.maturity
+    ].join(" ").toLowerCase();
+    return hay.includes(s);
+  });
+}
+
+q.addEventListener("input", () => render(filterList()));
+
+const mb = document.getElementById("mb");
+const mclose = document.getElementById("mclose");
+const mtitle = document.getElementById("mtitle");
+const mkv = document.getElementById("mkv");
+
+function openDepositModal(it){
+  mtitle.textContent = `Deposit — ${it.lock_symbol} → issuance`;
+  mkv.innerHTML = `
+    <div class="mrow"><span>Issuance</span><code>${esc(it.issuance_id)}</code></div>
+    <div class="mrow"><span>Deposit token</span><code>${esc(it.lock_symbol)}</code></div>
+    <div class="mrow"><span>Reward token</span><code>${esc(it.reward_symbol)}</code></div>
+    <div class="mrow"><span>Deposit escrow</span><code>${esc(it.deposit_escrow)}</code></div>
+  `;
+  mb.style.display = "flex";
+}
+function closeModal(){ mb.style.display = "none"; }
+
+mclose.addEventListener("click", closeModal);
+mb.addEventListener("click", (e) => { if (e.target === mb) closeModal(); });
+
+render(filterList());
+</script>
+</body>
+</html>
