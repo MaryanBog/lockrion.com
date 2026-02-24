@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Deterministic Reward Distribution on Solana — Lockrion</title>
+  <meta name="description" content="Technical overview of deterministic reward distribution and fixed-reserve issuance models on Solana.">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/icons/site.webmanifest">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <!-- FIXES: page scroll + clickable nav + background behind -->
+  <style>
+    html, body { height: auto; min-height: 100%; }
+    body { overflow-y: auto; overflow-x: hidden; }
+
+    /* background MUST NOT wrap content */
+    .bg{
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ensure page can grow */
+    .stage{
+      min-height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- background ONLY -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <!-- content -->
+  <div class="stage">
+    <div class="wrap">
+
+      <div class="top">
+        <iframe class="logo-mini" src="../lockrion-logo.html" scrolling="no"></iframe>
+        <div class="nav">
+          <a href="../index.html">Home</a>
+          <a href="../how.html">How It Works</a>
+          <a href="../docs.html">Documentation</a>
+          <a href="../research.html">Research</a>
+        </div>
+      </div>
+
+      <div class="hero">
+        <h1>Deterministic Reward Distribution on Solana</h1>
+      </div>
+
+      <div class="article">
+
+        <p>
+          Most on-chain reward systems rely on discretionary allocation, mutable
+          emission schedules, or off-chain settlement logic. Lockrion takes a different
+          approach.
+        </p>
+      
+        <p>
+          Lockrion defines a deterministic reserve-backed issuance model on Solana.
+          Every issuance begins with a fixed reward reserve that is locked at initialization
+          and governed entirely by immutable smart contract logic. From that moment forward,
+          distribution becomes a purely on-chain, algebraic process — not a managerial decision.
+        </p>
+      
+        <p>
+          The maximum distributable amount is known in advance, publicly verifiable,
+          and cannot be altered retroactively.
+        </p>
+      
+        <h2>Reserve Commitment</h2>
+      
+        <p>
+          At genesis, the issuer deposits the full reward pool into a program-controlled
+          escrow account. No partial funding. No dynamic expansion. No minting after launch.
+        </p>
+      
+        <p>
+          The reserve is structurally bounded from the first block. Distribution does not
+          create value — it only reallocates a predefined amount among participants.
+          The system behaves as a closed, mathematically constrained environment.
+        </p>
+      
+        <h2>Time-Locked Participation</h2>
+      
+        <p>
+          Participation is limited to a strictly defined Active window. Deposits are
+          accepted only within this interval and remain locked until maturity.
+          Intraday timing does not provide advantage.
+        </p>
+      
+        <p>
+          Instead of rewarding capital velocity, the contract accumulates time-weighted
+          participation for each address.
+        </p>
+      
+        <p>The effective weight of a participant is defined as:</p>
+      
+        <pre style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: rgba(2,6,23,0.35); border: 1px solid rgba(255,255,255,0.10); overflow:auto;">weight = deposited_amount × lock_duration</pre>
+      
+        <p>
+          This structurally prevents late-stage capital injection from distorting
+          proportional distribution. Reward share reflects both the size and the
+          duration of commitment — not execution speed.
+        </p>
+      
+        <h2>Deterministic Reward Calculation</h2>
+      
+        <p>
+          After maturity, rewards are computed using a fixed proportional formula:
+        </p>
+      
+        <pre style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: rgba(2,6,23,0.35); border: 1px solid rgba(255,255,255,0.10); overflow:auto;">user_reward = (user_weight / total_weight) × total_reserve</pre>
+      
+        <p>
+          All variables are stored in program state accounts and are fully verifiable
+          on-chain. No oracle inputs. No off-chain reconciliation. No administrative
+          adjustment.
+        </p>
+      
+        <p>
+          The result is deterministic and reproducible for any observer with access
+          to blockchain state.
+        </p>
+      
+        <h2>Settlement Architecture</h2>
+      
+        <p>
+          Reward claiming and capital withdrawal are intentionally separated.
+          Claiming a reward does not withdraw principal. Withdrawing principal
+          does not alter reward state.
+        </p>
+      
+        <p>
+          Each operation is gated by explicit program rules and executed
+          independently, ensuring clarity and minimizing hidden coupling
+          between reward and liquidity flows.
+        </p>
+      
+        <h2>On-Chain Guarantees</h2>
+      
+        <p>
+          The issuance contract enforces the following structural constraints:
+        </p>
+      
+        <p>
+          — the reward reserve is immutable after initialization<br>
+          — participation is bounded by a predefined time window<br>
+          — reward entitlement is single-execution<br>
+          — principal withdrawal is limited to locked balance<br>
+          — settlement logic is fully deterministic and reproducible
+        </p>
+      
+        <h2>What Lockrion Is — and Is Not</h2>
+      
+        <p>
+          Lockrion does not implement trading engines, liquidity pools, pricing
+          algorithms, or speculative mechanisms.
+        </p>
+      
+        <p>
+          It is a reserve commitment and deterministic distribution framework —
+          a minimal financial primitive designed to eliminate discretionary
+          allocation and encode reward logic directly into immutable program state.
+        </p>
+          <footer>
+      © Lockrion. Deterministic issuance contracts on Solana.
+    </footer>
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+[
+  {
+    "slug": "deterministic-reward-distribution",
+    "title": "Deterministic Reward Distribution on Solana",
+    "desc": "An on-chain reserve commitment framework where rewards are fixed at genesis, time-weighted, and distributed deterministically without governance or off-chain logic.",
+    "date": "2026-02-24"
+  }
+  ]

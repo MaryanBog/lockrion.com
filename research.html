@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K4BTZM0NNK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-K4BTZM0NNK');
+  </script>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lockrion — Documentation</title>
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/icons/site.webmanifest">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  </head>
+
+  <body>
+    <div class="bg"></div>
+    
+    <div class="stage">
+      <div class="wrap">
+    
+        <div class="top">
+          <iframe class="logo-mini" src="lockrion-logo.html" scrolling="no"></iframe>
+          <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="how.html">How It Works</a>
+            <a href="docs.html">Documentation</a>
+            <a href="contact.html">Contact</a>
+          </div>
+        </div>
+
+    <div class="hero">
+      <h1>Research & Articles</h1>
+
+      <div class="desc">
+        <p>
+          Technical articles on deterministic issuance models, smart-contract design,
+          and on-chain reserve architectures on Solana.
+        </p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-top">
+        <div class="panel-title">
+          <span class="chip"><i></i> Articles</span>
+        </div>
+      </div>
+
+      <div class="panel-body-art">
+        <div id="articles"></div>
+      </div>
+    </div>
+
+    <footer>
+      © Lockrion. Deterministic issuance contracts on Solana.
+    </footer>
+  </div>
+
+  <script>
+    async function loadArticles(){
+      const box = document.getElementById("articles");
+      try{
+        const res = await fetch("research/manifest.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("manifest.json not found");
+        const items = await res.json();
+    
+        if (!Array.isArray(items) || items.length === 0){
+          box.innerHTML = '<div class="card"><p>No articles yet.</p></div>';
+          return;
+        }
+    
+        box.innerHTML = items.map(it => `
+          <div class="card">
+            <h3>
+              <a href="research/${it.slug}.html">${it.title}</a>
+            </h3>
+            <p>${it.desc || ""}</p>
+          </div>
+        `).join("");
+      }catch(e){
+        box.innerHTML = '<div class="card"><p>Failed to load articles list.</p></div>';
+      }
+    }
+    
+    loadArticles();
+    </script>
+</body>
+</html>
