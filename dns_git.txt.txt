@@ -1,9 +1,0 @@
-@ 3600 IN A 185.199.108.153
-@ 3600 IN A 185.199.109.153
-@ 3600 IN A 185.199.110.153
-@ 3600 IN A 185.199.111.153
-
-@ 3600 IN MX 10 mx1.hoster.by.
-@ 3600 IN MX 20 mx2.hoster.by.
-
-www    3600    IN    CNAME    maryanbog.github.io.

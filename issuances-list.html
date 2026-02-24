@@ -6,292 +6,7 @@
 <title>Issuances List</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#0B0F14;
-  --fg:#E6EDF3;
-  --muted:#9AA4B2;
-  --cyan:#00E5FF;
-  --cyan2:#00B8D4;
-  --indigo:#6C63FF;
-  --card: rgba(255,255,255,0.035);
-  --card2: rgba(255,255,255,0.06);
-  --stroke: rgba(255,255,255,0.10);
-  --stroke2: rgba(108,99,255,0.45);
-  --ok: rgba(0,229,255,0.18);
-  --warn: rgba(255,193,7,0.18);
-  --bad: rgba(255,82,82,0.18);
-}
-
-*{ box-sizing:border-box; }
-
-html,body{
-  margin:0;
-  background:transparent;
-  color:var(--fg);
-  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-
-.wrap{
-  width: min(1100px, 100%);
-  margin: 0 auto;
-  padding: 14px;
-}
-
-.header{
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:18px;
-  margin-bottom: 14px;
-}
-
-.h-title{
-  font-size: 16px;
-  font-weight: 600;
-  margin:0 0 6px 0;
-}
-.h-sub{
-  margin:0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.55;
-  max-width: 760px;
-}
-
-.search{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-.search input{
-  width: 260px;
-  max-width: 40vw;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--stroke);
-  color: var(--fg);
-  outline: none;
-}
-.search input::placeholder{ color: rgba(154,164,178,0.75); }
-
-.grid{
-  display:grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 12px;
-}
-
-@media (max-width: 920px){
-  .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-}
-@media (max-width: 620px){
-  .grid{ grid-template-columns: 1fr; }
-  .search input{ width: 100%; max-width: 100%; }
-  .header{ flex-direction:column; align-items:stretch; }
-}
-
-.card{
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 16px;
-  padding: 14px;
-  overflow:hidden;
-  position:relative;
-}
-
-.card:hover{
-  border-color: rgba(0,229,255,0.22);
-  background: rgba(255,255,255,0.045);
-}
-
-.topline{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom: 10px;
-}
-
-.badge{
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--stroke);
-  background: rgba(255,255,255,0.02);
-  color: var(--muted);
-  user-select:none;
-  white-space:nowrap;
-}
-.badge.upcoming{ background: var(--warn); border-color: rgba(255,193,7,0.28); color: #FFE8A3; }
-.badge.active{ background: var(--ok); border-color: rgba(0,229,255,0.28); color: #BDF7FF; }
-.badge.claiming{ background: rgba(108,99,255,0.14); border-color: rgba(108,99,255,0.32); color: #D0CCFF; }
-.badge.closed{ background: var(--bad); border-color: rgba(255,82,82,0.30); color: #FFB6B6; }
-
-.idline{
-  font-size: 12px;
-  color: var(--muted);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  max-width: 65%;
-}
-
-.kv{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 12px;
-  margin-top: 10px;
-}
-
-.k{
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 4px;
-}
-.v{
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.row{
-  margin-top: 12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-weight: 500;
-  cursor:pointer;
-  transition: 0.18s ease;
-  border: 1px solid transparent;
-  background: rgba(255,255,255,0.03);
-  color: var(--fg);
-}
-
-.btn:hover{ background: rgba(255,255,255,0.06); }
-
-.btn-primary{
-  background: var(--cyan);
-  color: #061015;
-}
-.btn-primary:hover{ background: var(--cyan2); }
-
-.btn-outline{
-  background: rgba(108,99,255,0.06);
-  border-color: rgba(108,99,255,0.50);
-  color: #BEBBFF;
-}
-.btn-outline:hover{ background: rgba(108,99,255,0.12); }
-
-.btn:disabled{
-  opacity: 0.55;
-  cursor:not-allowed;
-}
-
-.details{
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(255,255,255,0.12);
-  display:none;
-}
-.details.open{ display:block; }
-
-.dline{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  padding: 6px 0;
-  font-size: 12px;
-  color: var(--muted);
-}
-.dline code{
-  color: var(--fg);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 12px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.10);
-  padding: 3px 6px;
-  border-radius: 8px;
-  max-width: 64%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.empty{
-  display:none;
-  padding: 18px;
-  border-radius: 14px;
-  border: 1px solid var(--stroke);
-  background: rgba(255,255,255,0.03);
-  color: var(--muted);
-}
-
-/* modal */
-.modal-backdrop{
-  position:fixed;
-  inset:0;
-  background: rgba(0,0,0,0.55);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding: 20px;
-  z-index:9999;
-}
-.modal{
-  width: min(520px, 100%);
-  background: rgba(10,14,20,0.92);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 18px;
-  padding: 16px;
-  box-shadow: 0 18px 60px rgba(0,0,0,0.45);
-}
-.modal h3{
-  margin: 0 0 8px 0;
-  font-size: 16px;
-}
-.modal p{
-  margin: 0 0 12px 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.55;
-}
-.modal .mkv{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin: 10px 0 12px;
-}
-.modal .mkv .mrow{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.modal .mkv code{
-  color: var(--fg);
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.10);
-  padding: 3px 6px;
-  border-radius: 8px;
-  max-width: 64%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.modal .actions{
-  display:flex;
-  gap:10px;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -319,22 +34,23 @@ html,body{
 <!-- Modal -->
 <div id="mb" class="modal-backdrop" role="dialog" aria-modal="true">
   <div class="modal">
-    <h3 id="mtitle">Deposit</h3>
-    <p id="msub">Wallet deposit flow will be connected here (Phantom/Solflare + on-chain transaction).</p>
+    <h3 id="mtitle">Action</h3>
+    <p id="msub">Flow will be connected here (wallet + on-chain transaction).</p>
+
     <div class="mkv" id="mkv"></div>
+
     <div class="actions">
       <button class="btn" id="mclose">Close</button>
-      <button class="btn btn-primary" id="msoon" disabled>Deposit (coming soon)</button>
+
+      <button class="btn btn-primary" id="mdeposit" disabled>Deposit</button>
+
+      <button class="btn btn-claim" id="mclaim" disabled>Claim Reward</button>
+      <button class="btn btn-outline" id="mwithdraw" disabled>Withdraw Deposit</button>
     </div>
   </div>
 </div>
 
 <script>
-/**
- * Заглушки. Потом заменим на реальные данные:
- * - либо загрузка issuances.json
- * - либо чтение PDA аккаунтов через RPC
- */
 const ISSUANCES = [
   {
     issuance_id: "8B5MJ619DV8WcxKLmU7fhXDkKbWK9e58RAJBURV4Pwfe",
@@ -384,6 +100,16 @@ const grid = document.getElementById("grid");
 const empty = document.getElementById("empty");
 const q = document.getElementById("q");
 
+/* modal refs */
+const mb = document.getElementById("mb");
+const mclose = document.getElementById("mclose");
+const mtitle = document.getElementById("mtitle");
+const msub = document.getElementById("msub");
+const mkv = document.getElementById("mkv");
+const mdeposit = document.getElementById("mdeposit");
+const mclaim = document.getElementById("mclaim");
+const mwithdraw = document.getElementById("mwithdraw");
+
 function badgeClass(status){
   const s = String(status || "").toLowerCase();
   if (s === "upcoming") return "upcoming";
@@ -397,7 +123,91 @@ function canDeposit(status){
   return String(status || "").toLowerCase() === "active";
 }
 
+function canSettle(status){
+  const s = String(status || "").toLowerCase();
+  return s === "claiming" || s === "closed";
+}
+
 function esc(s){ return String(s || ""); }
+
+/* Toggle modal buttons by mode */
+function setModalMode(mode){
+  // reset all
+  mdeposit.style.display = "none";
+  mclaim.style.display = "none";
+  mwithdraw.style.display = "none";
+
+  // disable by default
+  mdeposit.disabled = true;
+  mclaim.disabled = true;
+  mwithdraw.disabled = true;
+
+  if (mode === "deposit"){
+    mdeposit.style.display = "inline-block";
+  } else if (mode === "settle"){
+    mclaim.style.display = "inline-block";
+    mwithdraw.style.display = "inline-block";
+  }
+}
+
+function openDepositModal(it){
+  mtitle.textContent = `Deposit — ${esc(it.lock_symbol)}`;
+  msub.textContent = "Wallet deposit flow will be connected here (Phantom/Solflare + on-chain transaction).";
+
+  mkv.innerHTML = `
+    <div class="mrow"><span>Issuance</span><code>${esc(it.issuance_id)}</code></div>
+    <div class="mrow"><span>Deposit token</span><code>${esc(it.lock_symbol)}</code></div>
+    <div class="mrow"><span>Reward token</span><code>${esc(it.reward_symbol)}</code></div>
+    <div class="mrow"><span>Deposit escrow</span><code>${esc(it.deposit_escrow)}</code></div>
+  `;
+
+  setModalMode("deposit");
+  mdeposit.textContent = "Deposit";
+  mb.style.display = "flex";
+}
+
+function openSettleModal(it){
+  mtitle.textContent = "Withdraw Funds";
+  msub.textContent = "Claim/withdraw flow will be connected here (wallet + on-chain transaction).";
+
+  mkv.innerHTML = `
+    <div class="mrow"><span>Issuance</span><code>${esc(it.issuance_id)}</code></div>
+    <div class="mrow"><span>Status</span><code>${esc(it.status)}</code></div>
+    <div class="mrow"><span>Reward token</span><code>${esc(it.reward_symbol)}</code></div>
+    <div class="mrow"><span>Reward escrow</span><code>${esc(it.reward_escrow)}</code></div>
+    <div class="mrow"><span>Deposit escrow</span><code>${esc(it.deposit_escrow)}</code></div>
+  `;
+
+  setModalMode("settle");
+
+  mclaim.textContent = "Claim Reward";
+  mwithdraw.textContent = "Withdraw Deposit";
+
+  mb.style.display = "flex";
+}
+
+function openDetailsModal(it){
+  mtitle.textContent = "Issuance Details";
+  msub.textContent = "On-chain configuration and program accounts.";
+
+  mkv.innerHTML = `
+    <div class="mrow"><span>Issuance PDA</span><code>${esc(it.issuance_id)}</code></div>
+    <div class="mrow"><span>Lock mint</span><code>${esc(it.lock_mint)}</code></div>
+    <div class="mrow"><span>Reward mint</span><code>${esc(it.reward_mint)}</code></div>
+    <div class="mrow"><span>Deposit escrow</span><code>${esc(it.deposit_escrow)}</code></div>
+    <div class="mrow"><span>Reward escrow</span><code>${esc(it.reward_escrow)}</code></div>
+    <div class="mrow"><span>Platform treasury</span><code>${esc(it.platform_treasury)}</code></div>
+  `;
+
+  // hide action buttons (Details mode)
+  mdeposit.style.display = "none";
+  mclaim.style.display = "none";
+  mwithdraw.style.display = "none";
+
+  mb.style.display = "flex";
+}
+
+function closeModal(){ mb.style.display = "none"; }
 
 function render(list){
   grid.innerHTML = "";
@@ -446,34 +256,31 @@ function render(list){
 
     const btnDeposit = document.createElement("button");
     btnDeposit.className = "btn btn-primary";
-    btnDeposit.textContent = canDeposit(it.status) ? "Deposit" : "Deposit";
+    btnDeposit.textContent = "Deposit";
     btnDeposit.disabled = !canDeposit(it.status);
-    btnDeposit.title = canDeposit(it.status) ? "Deposit into this issuance" : "Deposit is available only when status = Active";
+    btnDeposit.title = canDeposit(it.status)
+      ? "Deposit into this issuance"
+      : "Deposit is available only when status = Active";
+
+    const btnSettle = document.createElement("button");
+    btnSettle.className = "btn btn-claim";
+    btnSettle.textContent = "Withdraw Funds";
+    btnSettle.disabled = !canSettle(it.status);
+    btnSettle.title = canSettle(it.status)
+      ? "Claim rewards and/or withdraw deposit after maturity"
+      : "Available only when status = Claiming/Closed";
 
     row.appendChild(btnDetails);
     row.appendChild(btnDeposit);
+    row.appendChild(btnSettle);
 
-    const details = document.createElement("div");
-    details.className = "details";
-    details.innerHTML = `
-      <div class="dline"><span>Issuance PDA</span><code>${esc(it.issuance_id)}</code></div>
-      <div class="dline"><span>Lock mint</span><code>${esc(it.lock_mint)}</code></div>
-      <div class="dline"><span>Reward mint</span><code>${esc(it.reward_mint)}</code></div>
-      <div class="dline"><span>Deposit escrow</span><code>${esc(it.deposit_escrow)}</code></div>
-      <div class="dline"><span>Reward escrow</span><code>${esc(it.reward_escrow)}</code></div>
-      <div class="dline"><span>Platform treasury</span><code>${esc(it.platform_treasury)}</code></div>
-    `;
-
-    btnDetails.addEventListener("click", () => {
-      details.classList.toggle("open");
-    });
-
+    btnDetails.addEventListener("click", () => openDetailsModal(it));
     btnDeposit.addEventListener("click", () => openDepositModal(it));
+    btnSettle.addEventListener("click", () => openSettleModal(it));
 
     card.appendChild(top);
     card.appendChild(kv);
     card.appendChild(row);
-    card.appendChild(details);
 
     grid.appendChild(card);
   }
@@ -493,25 +300,12 @@ function filterList(){
 
 q.addEventListener("input", () => render(filterList()));
 
-const mb = document.getElementById("mb");
-const mclose = document.getElementById("mclose");
-const mtitle = document.getElementById("mtitle");
-const mkv = document.getElementById("mkv");
-
-function openDepositModal(it){
-  mtitle.textContent = `Deposit — ${it.lock_symbol} → issuance`;
-  mkv.innerHTML = `
-    <div class="mrow"><span>Issuance</span><code>${esc(it.issuance_id)}</code></div>
-    <div class="mrow"><span>Deposit token</span><code>${esc(it.lock_symbol)}</code></div>
-    <div class="mrow"><span>Reward token</span><code>${esc(it.reward_symbol)}</code></div>
-    <div class="mrow"><span>Deposit escrow</span><code>${esc(it.deposit_escrow)}</code></div>
-  `;
-  mb.style.display = "flex";
-}
-function closeModal(){ mb.style.display = "none"; }
-
 mclose.addEventListener("click", closeModal);
 mb.addEventListener("click", (e) => { if (e.target === mb) closeModal(); });
+
+mdeposit.addEventListener("click", () => alert("Deposit flow"));
+mclaim.addEventListener("click", () => alert("Claim reward flow"));
+mwithdraw.addEventListener("click", () => alert("Withdraw deposit flow"));
 
 render(filterList());
 </script>

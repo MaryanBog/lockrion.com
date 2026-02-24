@@ -15,124 +15,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lockrion — Contact</title>
 
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#0B0F14;
-  --fg:#E6EDF3;
-  --muted:#9AA4B2;
-  --cyan:#00E5FF;
-  --indigo:#6C63FF;
-}
-
-*{ box-sizing:border-box; }
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--fg);
-  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  overflow-x:hidden;
-}
-
-.bg{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(900px 500px at 20% 20%, rgba(0,229,255,0.12), transparent 60%),
-    radial-gradient(900px 500px at 80% 70%, rgba(108,99,255,0.12), transparent 60%);
-  opacity:0.95;
-}
-
-.stage{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  padding:48px 24px 72px 24px;
-}
-
-.wrap{
-  width:min(860px, 100%);
-}
-
-.top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:32px;
-}
-
-.logo-mini{
-  width:220px;
-  height:74px;
-  border:0;
-  overflow:hidden;
-  display:block;
-}
-
-.nav{
-  display:flex;
-  gap:24px;
-  align-items:center;
-}
-
-.nav a{
-  color:var(--muted);
-  text-decoration:none;
-  transition:0.18s ease;
-}
-
-.nav a:hover{
-  color:var(--fg);
-}
-
-h1{
-  margin:0 0 18px 0;
-  font-size:clamp(30px,4vw,46px);
-  font-weight:600;
-}
-
-.section{
-  margin-top:24px;
-  padding:22px;
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:14px;
-}
-
-.section h2{
-  margin:0 0 14px 0;
-  font-size:18px;
-  font-weight:600;
-}
-
-.section p{
-  margin:6px 0;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-a.link{
-  color:var(--cyan);
-  text-decoration:none;
-}
-
-a.link:hover{
-  text-decoration:underline;
-}
-
-.small{
-  margin-top:14px;
-  font-size:14px;
-  color:var(--muted);
-}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -165,6 +55,7 @@ a.link:hover{
       <p>X (Twitter): <a class="link" href="https://x.com/FlexionDynamics" target="_blank">@FlexionDynamics</a></p>
       <p>LinkedIn: <a class="link" href="https://www.linkedin.com/in/maryan-bogdanov-15baa73a8" target="_blank">Maryan Bogdanov</a></p>
       <p>AngelList: <a class="link" href="https://stack.angellist.com/company/flexion-labs-inc" target="_blank">Flexion Labs Inc.</a></p>
+      <p>Corporate Email: <a class="link" href="mailto:ceo@flexionu.com">ceo@flexionu.com</a></p>
     </div>
 
     <div class="section">
@@ -180,8 +71,18 @@ a.link:hover{
       </p>
     </div>
 
+    <div class="section">
+      <p class="small">
+        If you are interested in purchasing equity in Flexion Labs Inc., please contact us via the corporate email above.
+      </p>
+
+    </div>
+    <footer>
+      © Lockrion. Deterministic issuance contracts on Solana.
+      </footer>
   </div>
 </div>
+
 
 </body>
 </html>

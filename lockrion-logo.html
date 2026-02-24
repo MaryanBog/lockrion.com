@@ -1,59 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
 <style>
-body {
-  background: #0B0F14;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-}
+  html, body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    background: transparent;
+    overflow:hidden;
+  }
 
-.logo-wrapper {
-  position: relative;
-  display: inline-block;
-}
+  .logo-wrapper{
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
 
-.logo-text {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 32px;
-  letter-spacing: 4px;
-  color: #00E5FF;
-  position: relative;
-  z-index: 2;
-}
+  .logo{
+    position:relative;
+    display:inline-block;
+    transform: scale(var(--s, 1));
+    transform-origin:center center;
+  }
 
-.orbit {
-  position: absolute;
-  width: 260px;
-  height: 80px;
-  border: 2px solid #00E5FF;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-15deg);
-  opacity: 0.75;
-  box-shadow: 0 0 10px #00E5FF;
-  animation: pulseGlow 4s ease-in-out infinite;
-}
+  .logo-text{
+    font-family:'Orbitron', system-ui, sans-serif;
+    font-size:32px;
+    letter-spacing:4px;
+    color:#00E5FF;
+    position:relative;
+    z-index:2;
+    line-height:1;
+    white-space:nowrap;
+    text-shadow: 0 0 10px rgba(0,229,255,0.25);
+  }
 
-@keyframes pulseGlow {
-  0% { opacity: 0.6; box-shadow: 0 0 8px #00E5FF; }
-  50% { opacity: 0.95; box-shadow: 0 0 16px #00E5FF; }
-  100% { opacity: 0.6; box-shadow: 0 0 8px #00E5FF; }
-}
+  .orbit{
+    position:absolute;
+    width:260px;
+    height:80px;
+    border:2px solid #00E5FF;
+    border-radius:50%;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%) rotate(-15deg);
+    opacity:0.75;
+    box-shadow:0 0 10px rgba(0,229,255,0.65);
+    animation:pulseGlow 4s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow{
+    0%{ opacity:0.55; box-shadow:0 0 8px rgba(0,229,255,0.55); }
+    50%{ opacity:0.95; box-shadow:0 0 16px rgba(0,229,255,0.85); }
+    100%{ opacity:0.55; box-shadow:0 0 8px rgba(0,229,255,0.55); }
+  }
 </style>
 </head>
+
 <body>
+  <div class="logo-wrapper">
+    <div class="logo" id="logo">
+      <div class="orbit"></div>
+      <div class="logo-text">LOCKRION</div>
+    </div>
+  </div>
 
-<div class="logo-wrapper">
-  <div class="orbit"></div>
-  <div class="logo-text">LOCKRION</div>
-</div>
+<script>
+  (function(){
+    const BASE_W = 320; 
+    const BASE_H = 120; 
+    const el = document.getElementById("logo");
 
+    function fit(){
+      const w = Math.max(1, window.innerWidth);
+      const h = Math.max(1, window.innerHeight);
+      const s = Math.min(w/BASE_W, h/BASE_H);
+      el.style.setProperty("--s", String(s));
+    }
+
+    window.addEventListener("resize", fit);
+    fit();
+  })();
+</script>
 </body>
 </html>
