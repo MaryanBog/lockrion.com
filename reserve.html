@@ -32,7 +32,6 @@
     <div class="wrap">
 
       <div class="top">
-        <!-- FIX: logo path (was icons/lockrion-logo.html) -->
         <iframe class="logo-mini" src="lockrion-logo.html" scrolling="no"></iframe>
       </div>
 
@@ -42,33 +41,99 @@
         <div class="desc">
           <p>
             On-chain treasury portfolio view (Solana).
-            Prices are fetched from CoinGecko. Balances are fetched from Solana RPC.
-          </p>
-          <p>
-            NOTE: This page must be opened via http(s) (e.g. localhost / GitHub Pages). file:// can block fetch().
+            Prices are fetched from CoinGecko via Lockrion proxy. Balances are fetched from Solana RPC via Lockrion proxy.
           </p>
         </div>
       </div>
 
-      <!-- ===== PORTFOLIO (SOLANA ONLY) ===== -->
-      <div class="panel" aria-label="Reserve portfolio">
-        <div class="panel-top">
-          <div class="panel-title">
-            <span class="chip"><i></i> Reserve Portfolio</span>
-          </div>
-        </div>
+<!-- ===== RESERVE LEDGER ===== -->
+<div class="panel" aria-label="Reserve ledger">
+
+    <div class="panel-top" style="
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 0 6px 0;
+  ">
+  
+    <span style="
+      font-size:12px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      color:#FFD700;
+      opacity:.85;
+    ">
+      Solana Mainnet
+    </span>
+  
+  </div>
 
         <div class="panel-body-art" style="max-height:none;">
           <div style="padding: 10px;">
-            <p style="margin:0 0 14px 0; color: var(--muted);">
-              Treasury (Solana):
-              <code style="margin-left:6px;">B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw</code>
-            </p>
 
+            <div style="
+            margin:0 0 18px 0;
+            padding:16px 18px;
+            border-radius:14px;
+            border:1px solid rgba(255,215,0,.25);
+            background:
+              radial-gradient(circle at 20% 20%, rgba(255,215,0,.08), transparent 60%),
+              linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+          ">
+          
+            <div style="display:flex;flex-direction:column;">
+              <span style="
+                font-size:12px;
+                letter-spacing:1px;
+                text-transform:uppercase;
+                opacity:.65;
+              ">
+                Treasury Vault
+              </span>
+          
+              <span style="
+                font-size:18px;
+                font-weight:600;
+                margin-top:4px;
+                color:#FFD700;
+              ">
+                Lockrion On-Chain Reserve
+              </span>
+            </div>
+          
+            <a
+              href="https://solscan.io/account/B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
+              target="_blank"
+              rel="noreferrer"
+              style="
+                font-family:monospace;
+                font-size:14px;
+                padding:8px 12px;
+                border-radius:8px;
+                background:rgba(0,0,0,.25);
+                border:1px solid rgba(255,255,255,.12);
+                color:var(--text);
+                text-decoration:none;
+                transition:all .2s ease;
+              "
+              onmouseover="this.style.borderColor='#FFD700';this.style.color='#FFD700'"
+              onmouseout="this.style.borderColor='rgba(255,255,255,.12)';this.style.color='var(--text)'"
+            >
+              B9xm…ughxw ↗
+            </a>
+          
+          </div>
+
+            <!-- Summary cards -->
             <div style="display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 16px 0;">
               <div style="flex:1;min-width:240px;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px;background: rgba(255,255,255,0.02);">
-                <div style="opacity:.75;font-size:12px;">Timestamp (UTC)</div>
-                <div id="pf_ts" style="font-size:14px;margin-top:6px;">—</div>
+                <div style="opacity:.75;font-size:12px;">Total tokens (integer)</div>
+                <div id="pf_total_tokens" style="font-size:20px;margin-top:6px;">—</div>
               </div>
               <div style="flex:1;min-width:240px;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px;background: rgba(255,255,255,0.02);">
                 <div style="opacity:.75;font-size:12px;">Total USD value</div>
@@ -76,15 +141,16 @@
               </div>
             </div>
 
+            <!-- Table -->
             <div style="overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:12px;">
               <table style="width:100%;border-collapse:collapse;min-width:760px;">
                 <thead>
                   <tr style="text-align:left;border-bottom:1px solid rgba(255,255,255,.12);">
                     <th style="padding:12px 14px;opacity:.8;font-weight:600;">Token</th>
-                    <th style="padding:12px 14px;opacity:.8;font-weight:600;">Mint</th>
                     <th style="padding:12px 14px;opacity:.8;font-weight:600;">Balance</th>
                     <th style="padding:12px 14px;opacity:.8;font-weight:600;">Price (USD)</th>
                     <th style="padding:12px 14px;opacity:.8;font-weight:600;">Value (USD)</th>
+                    <th style="padding:12px 14px;opacity:.8;font-weight:600;">Mint</th>
                   </tr>
                 </thead>
                 <tbody id="pf_rows">
@@ -107,22 +173,42 @@
 
   <script>
     (() => {
+      // ===== CONFIG =====
       const SOL_TREASURY = "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw";
     
-      // NO Alchemy demo, NO Serum (they were failing for you)
+      // Optional overrides (only if you want to force a name)
+      const TOKEN_NAMES = {
+        "7Admm1BZYi91xaS54D3ELnbP78VM1a1creUe2uVcibZ2": "FSM"
+      };
+    
+      // Solana JSON-RPC proxy (Railway)
       const SOL_RPCS = [
-  "https://lockrioncom-production.up.railway.app/api/solana"
-];
+        "https://lockrioncom-production.up.railway.app/api/solana"
+      ];
     
-const COINGECKO_BASE = "https://lockrioncom-production.up.railway.app/api/coingecko";
+      // CoinGecko proxy (Railway)
+      const COINGECKO_BASE = "https://lockrioncom-production.up.railway.app/api/coingecko";
     
+      // ===== HELPERS =====
       const $ = (id) => document.getElementById(id);
     
-      const fmt = (n, d=2) => (Number.isFinite(n) ? n.toLocaleString(undefined,{maximumFractionDigits:d}) : "—");
-      const fmtUsd = (n) => (Number.isFinite(n) ? ("$" + n.toLocaleString(undefined,{maximumFractionDigits:2})) : "—");
-      const shortMint = (m) => (m === "native" ? "native" : (m.slice(0,4) + "…" + m.slice(-4)));
+      const fmt = (n, d = 2) =>
+        (Number.isFinite(n) ? n.toLocaleString(undefined, { maximumFractionDigits: d }) : "—");
     
-      function setError(msg){ $("pf_err").textContent = msg || ""; }
+      const fmtUsd = (n) =>
+        (Number.isFinite(n) ? ("$" + n.toLocaleString(undefined, { maximumFractionDigits: 2 })) : "—");
+    
+      const shortMint = (m) =>
+        (m === "native" ? "native" : (m.slice(0, 4) + "…" + m.slice(-4)));
+    
+      function setError(msg) {
+        $("pf_err").textContent = msg || "";
+      }
+    
+      function appendError(msg) {
+        const prev = $("pf_err").textContent ? ($("pf_err").textContent + "\n\n") : "";
+        setError(prev + (msg || ""));
+      }
     
       function envHint() {
         if (window.location.protocol === "file:") {
@@ -131,48 +217,48 @@ const COINGECKO_BASE = "https://lockrioncom-production.up.railway.app/api/coinge
         return "";
       }
     
+      async function fetchJson(url) {
+        let r;
+        try {
+          r = await fetch(url, { method: "GET" });
+        } catch {
+          throw new Error("FETCH_FAILED @ " + url);
+        }
+        if (!r.ok) throw new Error("HTTP_" + r.status + " @ " + url);
+        return await r.json();
+      }
+    
       async function rpcCall(url, method, params) {
         let r;
         try {
           r = await fetch(url, {
             method: "POST",
-            headers: { "Content-Type":"application/json" },
-            body: JSON.stringify({ jsonrpc:"2.0", id:1, method, params })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
           });
         } catch {
           throw new Error(`FETCH_FAILED @ ${url} (${method})`);
         }
     
+        const text = await r.text().catch(() => "");
         if (!r.ok) {
-          const t = await r.text().catch(() => "");
-          throw new Error(`RPC_HTTP_${r.status} @ ${url} (${method})${t ? (" — " + t.slice(0,200)) : ""}`);
+          throw new Error(`RPC_HTTP_${r.status} @ ${url} (${method})${text ? (" — " + text.slice(0, 300)) : ""}`);
         }
     
         let j;
-        try { j = await r.json(); }
-        catch {
-          const t = await r.text().catch(() => "");
-          throw new Error(`RPC_BAD_JSON @ ${url} (${method})${t ? (" — " + t.slice(0,200)) : ""}`);
+        try {
+          j = text ? JSON.parse(text) : null;
+        } catch {
+          throw new Error(`RPC_BAD_JSON @ ${url} (${method})${text ? (" — " + text.slice(0, 300)) : ""}`);
         }
     
-        if (j.error) throw new Error(`RPC_JSON_ERROR @ ${url} (${method}) — ` + JSON.stringify(j.error));
-        return j.result;
-      }
-    
-      async function solRpc(method, params) {
-        let lastErr = null;
-        for (const url of SOL_RPCS) {
-          try {
-            return await rpcCall(url, method, params);
-          } catch (e) {
-            lastErr = e;
-          }
+        if (j && j.error) {
+          throw new Error(`RPC_JSON_ERROR @ ${url} (${method}) — ` + JSON.stringify(j.error));
         }
-        throw lastErr || new Error("All Solana RPC endpoints failed.");
+        return j && j.result != null ? j.result : null;
       }
     
       async function solRpcTryAll(method, params) {
-        // returns { ok: true, result } or { ok: false, errors: [...] }
         const errors = [];
         for (const url of SOL_RPCS) {
           try {
@@ -185,52 +271,26 @@ const COINGECKO_BASE = "https://lockrioncom-production.up.railway.app/api/coinge
         return { ok: false, errors };
       }
     
-      async function fetchJson(url) {
-        let r;
-        try {
-          r = await fetch(url, { method:"GET" });
-        } catch {
-          throw new Error("FETCH_FAILED @ " + url);
-        }
-        if (!r.ok) throw new Error("HTTP_" + r.status + " @ " + url);
-        return await r.json();
-      }
-    
-      async function fetchSolPriceUsd() {
-        // CoinGecko first
-        try {
-          const j = await fetchJson(COINGECKO_BASE + "/simple/price?ids=solana&vs_currencies=usd");
-          const usd = j && j.solana && j.solana.usd;
-          if (usd == null) throw new Error("CoinGecko: no usd field");
-          return { usd: Number(usd), src: "coingecko" };
-        } catch {
-          // Fallback: CryptoCompare (often not blocked when CG is)
-          const j2 = await fetchJson("https://min-api.cryptocompare.com/data/price?fsym=SOL&tsyms=USD");
-          const usd2 = j2 && j2.USD;
-          if (usd2 == null) throw new Error("CryptoCompare: no USD field");
-          return { usd: Number(usd2), src: "cryptocompare" };
-        }
-      }
-    
-      async function fetchSolHoldings() {
-        // 1) SOL balance (try all RPCs)
-        const b = await solRpcTryAll("getBalance", [SOL_TREASURY, { commitment:"confirmed" }]);
+      // ===== DATA =====
+      async function fetchSolHoldingsRaw() {
+        // SOL balance
+        const b = await solRpcTryAll("getBalance", [SOL_TREASURY, { commitment: "confirmed" }]);
         if (!b.ok) throw new Error("SOL_BALANCE_FAILED:\n" + b.errors.join("\n"));
-        const lamports = b.result && b.result.value != null ? b.result.value : 0;
+    
+        const lamports = (b.result && b.result.value != null) ? b.result.value : 0;
         const sol = lamports / 1e9;
     
-        const holdings = [{ token:"SOL", mint:"native", amount: sol }];
+        const holdings = [{ token: "SOL", mint: "native", amount: sol }];
     
-        // 2) SPL token accounts (try all RPCs, but do not hard-fail page)
+        // SPL token accounts
         const ta = await solRpcTryAll("getTokenAccountsByOwner", [
           SOL_TREASURY,
           { programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" },
-          { encoding:"jsonParsed", commitment:"confirmed" }
+          { encoding: "jsonParsed", commitment: "confirmed" }
         ]);
     
         if (!ta.ok) {
-          const prev = $("pf_err").textContent ? ($("pf_err").textContent + "\n\n") : "";
-          setError(prev + "SPL_TOKEN_ACCOUNTS_FAILED (all RPCs):\n" + ta.errors.join("\n"));
+          appendError("SPL_TOKEN_ACCOUNTS_FAILED:\n" + ta.errors.join("\n"));
           return holdings;
         }
     
@@ -239,75 +299,210 @@ const COINGECKO_BASE = "https://lockrioncom-production.up.railway.app/api/coinge
           const info = v?.account?.data?.parsed?.info;
           if (!info) continue;
     
-          const mint = info.mint;
+          const mint = String(info.mint || "");
+          if (!mint) continue;
+    
           const tokenAmount = info.tokenAmount || {};
           const ui = tokenAmount.uiAmount;
           const dec = tokenAmount.decimals;
           const raw = tokenAmount.amount;
     
           let amt = 0;
-          if (ui != null) amt = ui;
+          if (ui != null) amt = Number(ui);
           else if (raw != null && dec != null) amt = Number(raw) / Math.pow(10, Number(dec));
     
-          if (amt && amt !== 0) holdings.push({ token:"SPL", mint, amount: amt });
+          if (amt && amt !== 0) {
+            // name will be resolved later
+            holdings.push({ token: "SPL", mint, amount: amt });
+          }
         }
     
         return holdings;
       }
     
+      async function fetchSolPriceUsd() {
+        const j = await fetchJson(COINGECKO_BASE + "/simple/price?ids=solana&vs_currencies=usd");
+        const usd = j && j.solana && j.solana.usd;
+        if (usd == null) throw new Error("CoinGecko: no solana.usd field");
+        return Number(usd);
+      }
+    
+      // Get SPL prices (mint -> usd) from CoinGecko token_price
+      async function fetchSplPricesUsd(holdings) {
+        const mints = holdings
+          .filter(h => h.mint !== "native")
+          .map(h => String(h.mint));
+    
+        const unique = Array.from(new Set(mints));
+        if (!unique.length) return new Map();
+    
+        const url =
+          COINGECKO_BASE +
+          "/simple/token_price/solana?contract_addresses=" +
+          encodeURIComponent(unique.join(",")) +
+          "&vs_currencies=usd";
+    
+        const j = await fetchJson(url);
+    
+        const prices = new Map(); // mintLower -> usd
+        for (const [mint, obj] of Object.entries(j || {})) {
+          if (obj && obj.usd != null) prices.set(String(mint).toLowerCase(), Number(obj.usd));
+        }
+        return prices;
+      }
+    
+      // Resolve token symbols automatically:
+      // - if override in TOKEN_NAMES => use it
+      // - else try CoinGecko /coins/solana/contract/<mint> to get symbol
+      // - else keep "SPL"
+      async function resolveSplSymbols(holdings) {
+        const mints = holdings
+          .filter(h => h.mint !== "native")
+          .map(h => String(h.mint));
+    
+        const unique = Array.from(new Set(mints));
+    
+        // filter those without override
+        const need = unique.filter(m => !TOKEN_NAMES[m]);
+        if (!need.length) return new Map(); // mint -> symbol
+    
+        // Limit concurrency so we don't hammer CoinGecko
+        const out = new Map(); // mint -> SYMBOL
+        const MAX_CONC = 4;
+    
+        async function worker(queue) {
+          while (queue.length) {
+            const mint = queue.shift();
+            if (!mint) continue;
+    
+            // coinGecko endpoint: /coins/solana/contract/{contract_address}
+            const url = COINGECKO_BASE + "/coins/solana/contract/" + encodeURIComponent(mint);
+    
+            try {
+              const j = await fetchJson(url);
+              const sym = j && j.symbol ? String(j.symbol).toUpperCase() : "";
+              if (sym) out.set(mint, sym);
+            } catch {
+              // ignore: token not found on CoinGecko or rate limited
+            }
+          }
+        }
+    
+        const queue = need.slice();
+        const workers = [];
+        for (let i = 0; i < Math.min(MAX_CONC, queue.length); i++) workers.push(worker(queue));
+        await Promise.all(workers);
+    
+        return out;
+      }
+    
+      // Apply symbol resolution to holdings
+      async function fetchSolHoldingsResolved() {
+        const holdings = await fetchSolHoldingsRaw();
+    
+        // build symbols map: override + coingecko symbols
+        let cgSymbols = new Map();
+        try {
+          cgSymbols = await resolveSplSymbols(holdings);
+        } catch (e) {
+          appendError("SYMBOL_RESOLVE_FAILED:\n" + String(e && e.message ? e.message : e));
+        }
+    
+        for (const h of holdings) {
+          if (h.mint === "native") continue;
+    
+          const mint = String(h.mint);
+          const forced = TOKEN_NAMES[mint];
+          if (forced) {
+            h.token = forced;
+            continue;
+          }
+    
+          const sym = cgSymbols.get(mint);
+          if (sym) h.token = sym;
+          else h.token = "SPL";
+        }
+    
+        return holdings;
+      }
+    
+      // ===== RENDER =====
+      function mintUrl(mint) {
+        if (mint === "native") return "https://solscan.io/token/So11111111111111111111111111111111111111112";
+        return "https://solscan.io/token/" + encodeURIComponent(mint);
+      }
+    
+      function render(holdings, solPrice, splPrices) {
+        let totalUsd = 0;
+        let totalTokensInt = 0;
+    
+        const rows = [];
+    
+        for (const h of holdings) {
+          totalTokensInt += Math.trunc(Number(h.amount) || 0);
+    
+          let price = null;
+          if (h.mint === "native") price = solPrice;
+          else price = splPrices.get(String(h.mint).toLowerCase()) ?? null;
+    
+          const usd = (price != null) ? (h.amount * price) : NaN;
+          if (Number.isFinite(usd)) totalUsd += usd;
+    
+          const mintText = (h.mint === "native") ? "native" : shortMint(h.mint);
+    
+          rows.push(
+            `<tr style="border-bottom:1px solid rgba(255,255,255,.08);">` +
+              `<td style="padding:12px 14px;">${h.token}</td>` +
+              `<td style="padding:12px 14px;">${fmt(h.amount, 8)}</td>` +
+              `<td style="padding:12px 14px;">${price != null ? fmtUsd(price) : "—"}</td>` +
+              `<td style="padding:12px 14px;">${Number.isFinite(usd) ? fmtUsd(usd) : "—"}</td>` +
+              `<td style="padding:12px 14px;">` +
+                `<a href="${mintUrl(h.mint)}" target="_blank" rel="noreferrer" ` +
+                   `style="color: var(--text); text-decoration:none; border-bottom:1px dashed rgba(255,255,255,.35);">` +
+                  `<code title="${h.mint}">${mintText}</code>` +
+                `</a>` +
+              `</td>` +
+            `</tr>`
+          );
+        }
+    
+        $("pf_total_usd").textContent = fmtUsd(totalUsd);
+        $("pf_total_tokens").textContent = totalTokensInt.toLocaleString();
+    
+        $("pf_rows").innerHTML = rows.length
+          ? rows.join("")
+          : `<tr><td colspan="5" style="padding:14px;opacity:.75;">No assets found.</td></tr>`;
+      }
+    
+      // ===== MAIN =====
       async function main() {
         const hint = envHint();
         if (hint) setError(hint);
     
         try {
+          setError("");
           $("pf_rows").innerHTML = `<tr><td colspan="5" style="padding:14px;opacity:.75;">Loading…</td></tr>`;
     
-          const holdings = (await fetchSolHoldings()).filter(h => h.amount && h.amount !== 0);
+          const holdings = (await fetchSolHoldingsResolved()).filter(h => h.amount && h.amount !== 0);
     
-          // Prices: only SOL is guaranteed (CG -> CC fallback). SPL prices need proxy if CG is blocked.
           let solPrice = null;
+          let splPrices = new Map();
+    
           try {
-            const p = await fetchSolPriceUsd();
-            solPrice = p.usd;
-    
-            if (p.src !== "coingecko") {
-              const prev = $("pf_err").textContent ? ($("pf_err").textContent + "\n\n") : "";
-              setError(prev + "COINGECKO_BLOCKED: using CryptoCompare for SOL price.");
-            }
+            solPrice = await fetchSolPriceUsd();
           } catch (e) {
-            const prev = $("pf_err").textContent ? ($("pf_err").textContent + "\n\n") : "";
-            setError(prev + "SOL_PRICE_FAILED:\n" + String(e && e.message ? e.message : e));
+            appendError("SOL_PRICE_FAILED:\n" + String(e && e.message ? e.message : e));
           }
     
-          $("pf_ts").textContent = new Date().toISOString();
-    
-          let totalUsd = 0;
-          const rows = [];
-    
-          for (const h of holdings) {
-            let price = null;
-    
-            if (h.mint === "native") price = solPrice; // SOL price
-            // SPL price not available without CoinGecko token endpoint (blocked for you) or proxy
-    
-            const usd = (price != null) ? (h.amount * price) : NaN;
-            if (Number.isFinite(usd)) totalUsd += usd;
-    
-            rows.push(
-              `<tr style="border-bottom:1px solid rgba(255,255,255,.08);">` +
-                `<td style="padding:12px 14px;">${h.token}</td>` +
-                `<td style="padding:12px 14px;"><code title="${h.mint}">${shortMint(h.mint)}</code></td>` +
-                `<td style="padding:12px 14px;">${fmt(h.amount, 8)}</td>` +
-                `<td style="padding:12px 14px;">${price != null ? fmtUsd(price) : "—"}</td>` +
-                `<td style="padding:12px 14px;">${Number.isFinite(usd) ? fmtUsd(usd) : "—"}</td>` +
-              `</tr>`
-            );
+          try {
+            splPrices = await fetchSplPricesUsd(holdings);
+          } catch (e) {
+            appendError("SPL_PRICE_FAILED:\n" + String(e && e.message ? e.message : e));
           }
     
-          $("pf_total_usd").textContent = fmtUsd(totalUsd);
-          $("pf_rows").innerHTML = rows.join("");
+          render(holdings, solPrice, splPrices);
         } catch (e) {
-          setError(($("pf_err").textContent ? $("pf_err").textContent + "\n\n" : "") + "BALANCE_FETCH_ERROR:\n" + String(e && e.message ? e.message : e));
+          appendError("BALANCE_FETCH_ERROR:\n" + String(e && e.message ? e.message : e));
           $("pf_rows").innerHTML = `<tr><td colspan="5" style="padding:14px;opacity:.75;">Failed.</td></tr>`;
         }
       }
