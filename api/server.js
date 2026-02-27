@@ -68,7 +68,7 @@ app.get("/api/coingecko/*", async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 10000;
-app.listen(port, () => {
-  console.log("lockrion-proxy listening on", port);
+const port = Number(process.env.PORT || 8080);
+app.listen(port, "0.0.0.0", () => {
+  console.log("lockrion-proxy listening on 0.0.0.0:" + port);
 });
