@@ -27,6 +27,34 @@ app.use((req, res, next) => {
 // --- Health ---
 app.get("/health", (req, res) => res.json({ ok: true }));
 
+// --- Simple GET test endpoint (so you can test in browser without console) ---
+app.get("/api/solana/balance/:pubkey", async (req, res) => {
+  try {
+    const pubkey = String(req.params.pubkey || "").trim();
+    if (!pubkey) return res.status(400).json({ error: "MISSING_PUBKEY" });
+
+    const payload = {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "getBalance",
+      params: [pubkey, { commitment: "confirmed" }]
+    };
+
+    const upstream = await fetch(SOLANA_UPSTREAM, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const text = await upstream.text();
+    res.status(upstream.status);
+    res.setHeader("Content-Type", "application/json");
+    return res.send(text);
+  } catch (e) {
+    return res.status(502).json({ error: "SOLANA_PROXY_FAILED", details: String(e?.message || e) });
+  }
+});
+
 // --- SOLANA JSON-RPC proxy ---
 app.post("/api/solana", async (req, res) => {
   try {
