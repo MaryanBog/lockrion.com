@@ -1,0 +1,9 @@
+{
+    "build": {
+      "builder": "RAILPACK",
+      "buildCommand": "cd api && npm install"
+    },
+    "deploy": {
+      "startCommand": "cd api && npm start"
+    }
+  }
