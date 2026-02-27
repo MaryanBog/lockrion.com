@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K4BTZM0NNK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-K4BTZM0NNK');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Lockrion — Reserve</title>
+  <meta name="description" content="On-chain reserve portfolio view for Lockrion treasury on Solana." />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/icons/site.webmanifest">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="stage">
+    <div class="wrap">
+
+      <div class="top">
+        <!-- FIX: logo path (was icons/lockrion-logo.html) -->
+        <iframe class="logo-mini" src="lockrion-logo.html" scrolling="no"></iframe>
+      </div>
+
+      <div class="hero">
+        <h1>Lockrion Reserve (LRV)</h1>
+
+        <div class="desc">
+          <p>
+            On-chain treasury portfolio view (Solana).
+            Prices are fetched from CoinGecko. Balances are fetched from Solana RPC.
+          </p>
+          <p>
+            NOTE: This page must be opened via http(s) (e.g. localhost / GitHub Pages). file:// can block fetch().
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== PORTFOLIO (SOLANA ONLY) ===== -->
+      <div class="panel" aria-label="Reserve portfolio">
+        <div class="panel-top">
+          <div class="panel-title">
+            <span class="chip"><i></i> Reserve Portfolio</span>
+          </div>
+        </div>
+
+        <div class="panel-body-art" style="max-height:none;">
+          <div style="padding: 10px;">
+            <p style="margin:0 0 14px 0; color: var(--muted);">
+              Treasury (Solana):
+              <code style="margin-left:6px;">B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw</code>
+            </p>
+
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 16px 0;">
+              <div style="flex:1;min-width:240px;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px;background: rgba(255,255,255,0.02);">
+                <div style="opacity:.75;font-size:12px;">Timestamp (UTC)</div>
+                <div id="pf_ts" style="font-size:14px;margin-top:6px;">—</div>
+              </div>
+              <div style="flex:1;min-width:240px;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px;background: rgba(255,255,255,0.02);">
+                <div style="opacity:.75;font-size:12px;">Total USD value</div>
+                <div id="pf_total_usd" style="font-size:20px;margin-top:6px;">—</div>
+              </div>
+            </div>
+
+            <div style="overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:12px;">
+              <table style="width:100%;border-collapse:collapse;min-width:760px;">
+                <thead>
+                  <tr style="text-align:left;border-bottom:1px solid rgba(255,255,255,.12);">
+                    <th style="padding:12px 14px;opacity:.8;font-weight:600;">Token</th>
+                    <th style="padding:12px 14px;opacity:.8;font-weight:600;">Mint</th>
+                    <th style="padding:12px 14px;opacity:.8;font-weight:600;">Balance</th>
+                    <th style="padding:12px 14px;opacity:.8;font-weight:600;">Price (USD)</th>
+                    <th style="padding:12px 14px;opacity:.8;font-weight:600;">Value (USD)</th>
+                  </tr>
+                </thead>
+                <tbody id="pf_rows">
+                  <tr><td colspan="5" style="padding:14px;opacity:.75;">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p id="pf_err" style="margin:14px 0 0 0;color:#ffb3b3;white-space:pre-wrap;"></p>
+          </div>
+        </div>
+      </div>
+      <!-- ===== END PORTFOLIO ===== -->
+
+      <footer>
+        © Lockrion. Deterministic issuance contracts on Solana.
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const SOL_TREASURY = "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw";
+    
+      // NO Alchemy demo, NO Serum (they were failing for you)
+      const SOL_RPCS = [
+  "/api/solana"
+];
+    
+const COINGECKO_BASE = "/api/coingecko";
+    
+      const $ = (id) => document.getElementById(id);
+    
+      const fmt = (n, d=2) => (Number.isFinite(n) ? n.toLocaleString(undefined,{maximumFractionDigits:d}) : "—");
+      const fmtUsd = (n) => (Number.isFinite(n) ? ("$" + n.toLocaleString(undefined,{maximumFractionDigits:2})) : "—");
+      const shortMint = (m) => (m === "native" ? "native" : (m.slice(0,4) + "…" + m.slice(-4)));
+    
+      function setError(msg){ $("pf_err").textContent = msg || ""; }
+    
+      function envHint() {
+        if (window.location.protocol === "file:") {
+          return "OPEN_VIA_HTTP_REQUIRED: file:// pages may block fetch(). Use npx serve and open http://localhost:3000/reserve.html";
+        }
+        return "";
+      }
+    
+      async function rpcCall(url, method, params) {
+        let r;
+        try {
+          r = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type":"application/json" },
+            body: JSON.stringify({ jsonrpc:"2.0", id:1, method, params })
+          });
+        } catch {
+          throw new Error(`FETCH_FAILED @ ${url} (${method})`);
+        }
+    
+        if (!r.ok) {
+          const t = await r.text().catch(() => "");
+          throw new Error(`RPC_HTTP_${r.status} @ ${url} (${method})${t ? (" — " + t.slice(0,200)) : ""}`);
+        }
+    
+        let j;
+        try { j = await r.json(); }
+        catch {
+          const t = await r.text().catch(() => "");
+          throw new Error(`RPC_BAD_JSON @ ${url} (${method})${t ? (" — " + t.slice(0,200)) : ""}`);
+        }
+    
+        if (j.error) throw new Error(`RPC_JSON_ERROR @ ${url} (${method}) — ` + JSON.stringify(j.error));
+        return j.result;
+      }
+    
+      async function solRpc(method, params) {
+        let lastErr = null;
+        for (const url of SOL_RPCS) {
+          try {
+            return await rpcCall(url, method, params);
+          } catch (e) {
+            lastErr = e;
+          }
+        }
+        throw lastErr || new Error("All Solana RPC endpoints failed.");
+      }
+    
+      async function solRpcTryAll(method, params) {
+        // returns { ok: true, result } or { ok: false, errors: [...] }
+        const errors = [];
+        for (const url of SOL_RPCS) {
+          try {
+            const result = await rpcCall(url, method, params);
+            return { ok: true, result, url };
+          } catch (e) {
+            errors.push(String(e && e.message ? e.message : e));
+          }
+        }
+        return { ok: false, errors };
+      }
+    
+      async function fetchJson(url) {
+        let r;
+        try {
+          r = await fetch(url, { method:"GET" });
+        } catch {
+          throw new Error("FETCH_FAILED @ " + url);
+        }
+        if (!r.ok) throw new Error("HTTP_" + r.status + " @ " + url);
+        return await r.json();
+      }
+    
+      async function fetchSolPriceUsd() {
+        // CoinGecko first
+        try {
+          const j = await fetchJson(COINGECKO_BASE + "/simple/price?ids=solana&vs_currencies=usd");
+          const usd = j && j.solana && j.solana.usd;
+          if (usd == null) throw new Error("CoinGecko: no usd field");
+          return { usd: Number(usd), src: "coingecko" };
+        } catch {
+          // Fallback: CryptoCompare (often not blocked when CG is)
+          const j2 = await fetchJson("https://min-api.cryptocompare.com/data/price?fsym=SOL&tsyms=USD");
+          const usd2 = j2 && j2.USD;
+          if (usd2 == null) throw new Error("CryptoCompare: no USD field");
+          return { usd: Number(usd2), src: "cryptocompare" };
+        }
+      }
+    
+      async function fetchSolHoldings() {
+        // 1) SOL balance (try all RPCs)
+        const b = await solRpcTryAll("getBalance", [SOL_TREASURY, { commitment:"confirmed" }]);
+        if (!b.ok) throw new Error("SOL_BALANCE_FAILED:\n" + b.errors.join("\n"));
+        const lamports = b.result && b.result.value != null ? b.result.value : 0;
+        const sol = lamports / 1e9;
+    
+        const holdings = [{ token:"SOL", mint:"native", amount: sol }];
+    
+        // 2) SPL token accounts (try all RPCs, but do not hard-fail page)
+        const ta = await solRpcTryAll("getTokenAccountsByOwner", [
+          SOL_TREASURY,
+          { programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" },
+          { encoding:"jsonParsed", commitment:"confirmed" }
+        ]);
+    
+        if (!ta.ok) {
+          const prev = $("pf_err").textContent ? ($("pf_err").textContent + "\n\n") : "";
+          setError(prev + "SPL_TOKEN_ACCOUNTS_FAILED (all RPCs):\n" + ta.errors.join("\n"));
+          return holdings;
+        }
+    
+        const vals = (ta.result && ta.result.value) ? ta.result.value : [];
+        for (const v of vals) {
+          const info = v?.account?.data?.parsed?.info;
+          if (!info) continue;
+    
+          const mint = info.mint;
+          const tokenAmount = info.tokenAmount || {};
+          const ui = tokenAmount.uiAmount;
+          const dec = tokenAmount.decimals;
+          const raw = tokenAmount.amount;
+    
+          let amt = 0;
+          if (ui != null) amt = ui;
+          else if (raw != null && dec != null) amt = Number(raw) / Math.pow(10, Number(dec));
+    
+          if (amt && amt !== 0) holdings.push({ token:"SPL", mint, amount: amt });
+        }
+    
+        return holdings;
+      }
+    
+      async function main() {
+        const hint = envHint();
+        if (hint) setError(hint);
+    
+        try {
+          $("pf_rows").innerHTML = `<tr><td colspan="5" style="padding:14px;opacity:.75;">Loading…</td></tr>`;
+    
+          const holdings = (await fetchSolHoldings()).filter(h => h.amount && h.amount !== 0);
+    
+          // Prices: only SOL is guaranteed (CG -> CC fallback). SPL prices need proxy if CG is blocked.
+          let solPrice = null;
+          try {
+            const p = await fetchSolPriceUsd();
+            solPrice = p.usd;
+    
+            if (p.src !== "coingecko") {
+              const prev = $("pf_err").textContent ? ($("pf_err").textContent + "\n\n") : "";
+              setError(prev + "COINGECKO_BLOCKED: using CryptoCompare for SOL price.");
+            }
+          } catch (e) {
+            const prev = $("pf_err").textContent ? ($("pf_err").textContent + "\n\n") : "";
+            setError(prev + "SOL_PRICE_FAILED:\n" + String(e && e.message ? e.message : e));
+          }
+    
+          $("pf_ts").textContent = new Date().toISOString();
+    
+          let totalUsd = 0;
+          const rows = [];
+    
+          for (const h of holdings) {
+            let price = null;
+    
+            if (h.mint === "native") price = solPrice; // SOL price
+            // SPL price not available without CoinGecko token endpoint (blocked for you) or proxy
+    
+            const usd = (price != null) ? (h.amount * price) : NaN;
+            if (Number.isFinite(usd)) totalUsd += usd;
+    
+            rows.push(
+              `<tr style="border-bottom:1px solid rgba(255,255,255,.08);">` +
+                `<td style="padding:12px 14px;">${h.token}</td>` +
+                `<td style="padding:12px 14px;"><code title="${h.mint}">${shortMint(h.mint)}</code></td>` +
+                `<td style="padding:12px 14px;">${fmt(h.amount, 8)}</td>` +
+                `<td style="padding:12px 14px;">${price != null ? fmtUsd(price) : "—"}</td>` +
+                `<td style="padding:12px 14px;">${Number.isFinite(usd) ? fmtUsd(usd) : "—"}</td>` +
+              `</tr>`
+            );
+          }
+    
+          $("pf_total_usd").textContent = fmtUsd(totalUsd);
+          $("pf_rows").innerHTML = rows.join("");
+        } catch (e) {
+          setError(($("pf_err").textContent ? $("pf_err").textContent + "\n\n" : "") + "BALANCE_FETCH_ERROR:\n" + String(e && e.message ? e.message : e));
+          $("pf_rows").innerHTML = `<tr><td colspan="5" style="padding:14px;opacity:.75;">Failed.</td></tr>`;
+        }
+      }
+    
+      main();
+    })();
+    </script>
+
+</body>
+</html>
