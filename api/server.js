@@ -24,8 +24,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// --- Health ---
-app.get("/health", (req, res) => res.json({ ok: true }));
+// --- Health (versioned) ---
+app.get("/health", (req, res) =>
+  res.json({ ok: true, version: "v3-2026-02-27", pid: process.pid })
+);
+
+// --- Who am I (to prove which code is deployed) ---
+app.get("/__whoami", (req, res) =>
+  res.type("text").send("lockrion-proxy v3-2026-02-27")
+);
 
 // --- Simple GET test endpoint (so you can test in browser without console) ---
 app.get("/api/solana/balance/:pubkey", async (req, res) => {
