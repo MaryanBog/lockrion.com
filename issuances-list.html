@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Issuances List</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -16,7 +15,7 @@
     <div>
       <p class="h-title">Issuances</p>
       <p class="h-sub">
-        This page lists all reserve-backed issuances. Choose an issuance and deposit the required token during the Active window.
+        This page lists all reserve-backed issuances. Choose an issuance and deposit the required token during the active window.
         Rewards are distributed deterministically by the smart contract on Solana.
       </p>
     </div>
@@ -41,9 +40,7 @@
 
     <div class="actions">
       <button class="btn" id="mclose">Close</button>
-
       <button class="btn btn-primary" id="mdeposit" disabled>Deposit</button>
-
       <button class="btn btn-claim" id="mclaim" disabled>Claim Reward</button>
       <button class="btn btn-outline" id="mwithdraw" disabled>Withdraw Deposit</button>
     </div>
@@ -93,14 +90,13 @@ const ISSUANCES = [
     deposit_escrow: "DEPOSIT_ESCROW_EXAMPLE_99999999999999999999999",
     reward_escrow: "REWARD_ESCROW_EXAMPLE_AAAAAAAAAAAAAAAAAAAAAAAAAA",
     platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
-  },
+  }
 ];
 
 const grid = document.getElementById("grid");
 const empty = document.getElementById("empty");
 const q = document.getElementById("q");
 
-/* modal refs */
 const mb = document.getElementById("mb");
 const mclose = document.getElementById("mclose");
 const mtitle = document.getElementById("mtitle");
@@ -110,7 +106,7 @@ const mdeposit = document.getElementById("mdeposit");
 const mclaim = document.getElementById("mclaim");
 const mwithdraw = document.getElementById("mwithdraw");
 
-function badgeClass(status){
+function badgeClass(status) {
   const s = String(status || "").toLowerCase();
   if (s === "upcoming") return "upcoming";
   if (s === "active") return "active";
@@ -119,18 +115,19 @@ function badgeClass(status){
   return "";
 }
 
-function canDeposit(status){
+function canDeposit(status) {
   return true; // demo mode
 }
 
-function canSettle(status){
-  const s = String(status || "").toLowerCase();
-  return s === "claiming" || s === "closed";
+function canSettle(status) {
+  return true; // demo mode
 }
 
-function esc(s){ return String(s || ""); }
+function esc(s) {
+  return String(s || "");
+}
 
-function setModalMode(mode){
+function setModalMode(mode) {
   mdeposit.style.display = "none";
   mclaim.style.display = "none";
   mwithdraw.style.display = "none";
@@ -139,10 +136,10 @@ function setModalMode(mode){
   mclaim.disabled = true;
   mwithdraw.disabled = true;
 
-  if (mode === "deposit"){
+  if (mode === "deposit") {
     mdeposit.style.display = "inline-block";
     mdeposit.disabled = false;
-  } else if (mode === "settle"){
+  } else if (mode === "settle") {
     mclaim.style.display = "inline-block";
     mwithdraw.style.display = "inline-block";
     mclaim.disabled = false;
@@ -150,9 +147,9 @@ function setModalMode(mode){
   }
 }
 
-function openDepositModal(it){
+function openDepositModal(it) {
   mtitle.textContent = `Deposit — ${esc(it.lock_symbol)}`;
- msub.textContent = "Review issuance parameters and continue with wallet confirmation.";
+  msub.textContent = "Review issuance parameters and continue with wallet confirmation.";
 
   mkv.innerHTML = `
     <div class="mrow"><span>Issuance</span><code>${esc(it.issuance_id)}</code></div>
@@ -166,8 +163,8 @@ function openDepositModal(it){
   mb.style.display = "flex";
 }
 
-function openSettleModal(it){
-  mtitle.textContent = "Withdraw Funds";
+function openSettleModal(it) {
+  mtitle.textContent = "Claim / Withdraw";
   msub.textContent = "Review settlement parameters and continue with wallet confirmation.";
 
   mkv.innerHTML = `
@@ -179,14 +176,12 @@ function openSettleModal(it){
   `;
 
   setModalMode("settle");
-
   mclaim.textContent = "Claim Reward";
   mwithdraw.textContent = "Withdraw Deposit";
-
   mb.style.display = "flex";
 }
 
-function openDetailsModal(it){
+function openDetailsModal(it) {
   mtitle.textContent = "Issuance Details";
   msub.textContent = "On-chain configuration and program accounts.";
 
@@ -199,7 +194,6 @@ function openDetailsModal(it){
     <div class="mrow"><span>Platform treasury</span><code>${esc(it.platform_treasury)}</code></div>
   `;
 
-  // hide action buttons (Details mode)
   mdeposit.style.display = "none";
   mclaim.style.display = "none";
   mwithdraw.style.display = "none";
@@ -207,17 +201,30 @@ function openDetailsModal(it){
   mb.style.display = "flex";
 }
 
-function closeModal(){ mb.style.display = "none"; }
+function closeModal() {
+  mb.style.display = "none";
+}
 
-function render(list){
+async function requestWalletConnection() {
+  if (window.parent && typeof window.parent.connectWallet === "function") {
+    const wallet = await window.parent.connectWallet();
+    if (!wallet) throw new Error("Wallet not connected");
+    return wallet;
+  }
+  throw new Error("Wallet connect is not available");
+}
+
+function render(list) {
   grid.innerHTML = "";
-  if (!list.length){
+
+  if (!list.length) {
     empty.style.display = "block";
     return;
   }
+
   empty.style.display = "none";
 
-  for (const it of list){
+  for (const it of list) {
     const card = document.createElement("div");
     card.className = "card";
 
@@ -258,17 +265,13 @@ function render(list){
     btnDeposit.className = "btn btn-primary";
     btnDeposit.textContent = "Deposit";
     btnDeposit.disabled = !canDeposit(it.status);
-    btnDeposit.title = canDeposit(it.status)
-      ? "Deposit into this issuance"
-      : "Deposit is available only when status = Active";
+    btnDeposit.title = "Deposit into this issuance";
 
     const btnSettle = document.createElement("button");
     btnSettle.className = "btn btn-claim";
     btnSettle.textContent = "Claim / Withdraw";
     btnSettle.disabled = !canSettle(it.status);
-    btnSettle.title = canSettle(it.status)
-      ? "Claim rewards and/or withdraw deposit after maturity"
-      : "Available only when status = Claiming/Closed";
+    btnSettle.title = "Claim rewards and/or withdraw deposit";
 
     row.appendChild(btnDetails);
     row.appendChild(btnDeposit);
@@ -286,14 +289,21 @@ function render(list){
   }
 }
 
-function filterList(){
+function filterList() {
   const s = (q.value || "").trim().toLowerCase();
   if (!s) return ISSUANCES.slice();
+
   return ISSUANCES.filter(it => {
     const hay = [
-      it.issuance_id, it.status, it.lock_symbol, it.reward_symbol,
-      it.reserve_total, it.start, it.maturity
+      it.issuance_id,
+      it.status,
+      it.lock_symbol,
+      it.reward_symbol,
+      it.reserve_total,
+      it.start,
+      it.maturity
     ].join(" ").toLowerCase();
+
     return hay.includes(s);
   });
 }
@@ -301,21 +311,31 @@ function filterList(){
 q.addEventListener("input", () => render(filterList()));
 
 mclose.addEventListener("click", closeModal);
-mb.addEventListener("click", (e) => { if (e.target === mb) closeModal(); });
+mb.addEventListener("click", (e) => {
+  if (e.target === mb) closeModal();
+});
 
-mdeposit.addEventListener("click", () => {
+mdeposit.addEventListener("click", async () => {
   mdeposit.disabled = true;
   mdeposit.textContent = "Processing...";
 
-  setTimeout(() => {
-    mdeposit.textContent = "Success ✅";
+  try {
+    await requestWalletConnection();
 
     setTimeout(() => {
-      mdeposit.textContent = "Deposit";
-      mdeposit.disabled = false;
-      closeModal();
-    }, 800);
-  }, 1000);
+      mdeposit.textContent = "Success ✅";
+
+      setTimeout(() => {
+        mdeposit.textContent = "Deposit";
+        mdeposit.disabled = false;
+        closeModal();
+      }, 800);
+    }, 1000);
+  } catch (e) {
+    alert(e?.message || "Deposit failed");
+    mdeposit.disabled = false;
+    mdeposit.textContent = "Deposit";
+  }
 });
 
 mclaim.addEventListener("click", async () => {
@@ -323,12 +343,7 @@ mclaim.addEventListener("click", async () => {
   mclaim.textContent = "Claiming...";
 
   try {
-    if (window.parent && typeof window.parent.connectWallet === "function") {
-      const wallet = await window.parent.connectWallet();
-      if (!wallet) throw new Error("Wallet not connected");
-    } else {
-      throw new Error("Wallet connect is not available");
-    }
+    await requestWalletConnection();
 
     setTimeout(() => {
       mclaim.textContent = "Success ✅";
@@ -339,24 +354,19 @@ mclaim.addEventListener("click", async () => {
         closeModal();
       }, 800);
     }, 1000);
-
   } catch (e) {
     alert(e?.message || "Claim failed");
     mclaim.disabled = false;
     mclaim.textContent = "Claim Reward";
   }
 });
+
 mwithdraw.addEventListener("click", async () => {
   mwithdraw.disabled = true;
   mwithdraw.textContent = "Withdrawing...";
 
   try {
-    if (window.parent && typeof window.parent.connectWallet === "function") {
-      const wallet = await window.parent.connectWallet();
-      if (!wallet) throw new Error("Wallet not connected");
-    } else {
-      throw new Error("Wallet connect is not available");
-    }
+    await requestWalletConnection();
 
     setTimeout(() => {
       mwithdraw.textContent = "Success ✅";
@@ -367,7 +377,6 @@ mwithdraw.addEventListener("click", async () => {
         closeModal();
       }, 800);
     }, 1000);
-
   } catch (e) {
     alert(e?.message || "Withdraw failed");
     mwithdraw.disabled = false;
