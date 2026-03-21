@@ -35,7 +35,7 @@
 <div id="mb" class="modal-backdrop" role="dialog" aria-modal="true">
   <div class="modal">
     <h3 id="mtitle">Action</h3>
-    <p id="msub">Flow will be connected here (wallet + on-chain transaction).</p>
+    <p id="msub">Review issuance parameters and continue with wallet confirmation.</p>
 
     <div class="mkv" id="mkv"></div>
 
@@ -94,48 +94,6 @@ const ISSUANCES = [
     reward_escrow: "REWARD_ESCROW_EXAMPLE_AAAAAAAAAAAAAAAAAAAAAAAAAA",
     platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
   },
-  {
-    issuance_id: "8B5MJ619DV8WcxKLmU7fhXDkKbWK9e58RAJBURV4Pwfe",
-    status: "Upcoming",
-    lock_symbol: "LOCK",
-    reward_symbol: "USDC",
-    reserve_total: "1,000,000",
-    start: "2026-03-01 00:00 UTC",
-    maturity: "2026-03-31 00:00 UTC",
-    lock_mint: "LOCK_MINT_EXAMPLE_111111111111111111111111111111",
-    reward_mint: "USDC_MINT_EXAMPLE_222222222222222222222222222222",
-    deposit_escrow: "DEPOSIT_ESCROW_EXAMPLE_33333333333333333333333",
-    reward_escrow: "REWARD_ESCROW_EXAMPLE_444444444444444444444444",
-    platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
-  },
-  {
-    issuance_id: "9yQf8s7YxQj3vZrD4mK2p8pZx4g1VbY7h3mQn1a2b3c4",
-    status: "Active",
-    lock_symbol: "LOCK",
-    reward_symbol: "USDC",
-    reserve_total: "250,000",
-    start: "2026-02-20 00:00 UTC",
-    maturity: "2026-03-21 00:00 UTC",
-    lock_mint: "LOCK_MINT_EXAMPLE_555555555555555555555555555555",
-    reward_mint: "USDC_MINT_EXAMPLE_222222222222222222222222222222",
-    deposit_escrow: "DEPOSIT_ESCROW_EXAMPLE_66666666666666666666666",
-    reward_escrow: "REWARD_ESCROW_EXAMPLE_777777777777777777777777",
-    platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
-  },
-  {
-    issuance_id: "4mN2pQ7vXk9sT3aB5cD8eF1gH6jK2lM9nP4qR7sT8uV",
-    status: "Claiming",
-    lock_symbol: "LOCK",
-    reward_symbol: "USDC",
-    reserve_total: "75,000",
-    start: "2026-01-10 00:00 UTC",
-    maturity: "2026-02-09 00:00 UTC",
-    lock_mint: "LOCK_MINT_EXAMPLE_888888888888888888888888888888",
-    reward_mint: "USDC_MINT_EXAMPLE_222222222222222222222222222222",
-    deposit_escrow: "DEPOSIT_ESCROW_EXAMPLE_99999999999999999999999",
-    reward_escrow: "REWARD_ESCROW_EXAMPLE_AAAAAAAAAAAAAAAAAAAAAAAAAA",
-    platform_treasury: "B9xmmg2zPMSwPg7iX7a9J2j6SK5LcopZ8abRDj9ughxw"
-  }
 ];
 
 const grid = document.getElementById("grid");
@@ -162,7 +120,7 @@ function badgeClass(status){
 }
 
 function canDeposit(status){
-  return String(status || "").toLowerCase() === "active";
+  return true; // demo mode
 }
 
 function canSettle(status){
@@ -194,7 +152,7 @@ function setModalMode(mode){
 
 function openDepositModal(it){
   mtitle.textContent = `Deposit — ${esc(it.lock_symbol)}`;
-  msub.textContent = "Wallet deposit flow will be connected here (Phantom/Solflare + on-chain transaction).";
+ msub.textContent = "Review issuance parameters and continue with wallet confirmation.";
 
   mkv.innerHTML = `
     <div class="mrow"><span>Issuance</span><code>${esc(it.issuance_id)}</code></div>
@@ -210,7 +168,7 @@ function openDepositModal(it){
 
 function openSettleModal(it){
   mtitle.textContent = "Withdraw Funds";
-  msub.textContent = "Claim/withdraw flow will be connected here (wallet + on-chain transaction).";
+  msub.textContent = "Review settlement parameters and continue with wallet confirmation.";
 
   mkv.innerHTML = `
     <div class="mrow"><span>Issuance</span><code>${esc(it.issuance_id)}</code></div>
@@ -306,7 +264,7 @@ function render(list){
 
     const btnSettle = document.createElement("button");
     btnSettle.className = "btn btn-claim";
-    btnSettle.textContent = "Withdraw Funds";
+    btnSettle.textContent = "Claim / Withdraw";
     btnSettle.disabled = !canSettle(it.status);
     btnSettle.title = canSettle(it.status)
       ? "Claim rewards and/or withdraw deposit after maturity"
@@ -345,9 +303,91 @@ q.addEventListener("input", () => render(filterList()));
 mclose.addEventListener("click", closeModal);
 mb.addEventListener("click", (e) => { if (e.target === mb) closeModal(); });
 
-mdeposit.addEventListener("click", () => alert("Deposit flow"));
-mclaim.addEventListener("click", () => alert("Claim reward flow"));
-mwithdraw.addEventListener("click", () => alert("Withdraw deposit flow"));
+mdeposit.addEventListener("click", async () => {
+  mdeposit.disabled = true;
+  mdeposit.textContent = "Processing...";
+
+  try {
+    if (window.parent && typeof window.parent.connectWallet === "function") {
+      const wallet = await window.parent.connectWallet();
+      if (!wallet) throw new Error("Wallet not connected");
+    } else {
+      throw new Error("Wallet connect is not available");
+    }
+
+    setTimeout(() => {
+      mdeposit.textContent = "Success ✅";
+
+      setTimeout(() => {
+        mdeposit.textContent = "Deposit";
+        mdeposit.disabled = false;
+        closeModal();
+      }, 800);
+    }, 1000);
+
+  } catch (e) {
+    alert(e?.message || "Deposit failed");
+    mdeposit.disabled = false;
+    mdeposit.textContent = "Deposit";
+  }
+});
+
+mclaim.addEventListener("click", async () => {
+  mclaim.disabled = true;
+  mclaim.textContent = "Claiming...";
+
+  try {
+    if (window.parent && typeof window.parent.connectWallet === "function") {
+      const wallet = await window.parent.connectWallet();
+      if (!wallet) throw new Error("Wallet not connected");
+    } else {
+      throw new Error("Wallet connect is not available");
+    }
+
+    setTimeout(() => {
+      mclaim.textContent = "Success ✅";
+
+      setTimeout(() => {
+        mclaim.textContent = "Claim Reward";
+        mclaim.disabled = false;
+        closeModal();
+      }, 800);
+    }, 1000);
+
+  } catch (e) {
+    alert(e?.message || "Claim failed");
+    mclaim.disabled = false;
+    mclaim.textContent = "Claim Reward";
+  }
+});
+mwithdraw.addEventListener("click", async () => {
+  mwithdraw.disabled = true;
+  mwithdraw.textContent = "Withdrawing...";
+
+  try {
+    if (window.parent && typeof window.parent.connectWallet === "function") {
+      const wallet = await window.parent.connectWallet();
+      if (!wallet) throw new Error("Wallet not connected");
+    } else {
+      throw new Error("Wallet connect is not available");
+    }
+
+    setTimeout(() => {
+      mwithdraw.textContent = "Success ✅";
+
+      setTimeout(() => {
+        mwithdraw.textContent = "Withdraw Deposit";
+        mwithdraw.disabled = false;
+        closeModal();
+      }, 800);
+    }, 1000);
+
+  } catch (e) {
+    alert(e?.message || "Withdraw failed");
+    mwithdraw.disabled = false;
+    mwithdraw.textContent = "Withdraw Deposit";
+  }
+});
 
 render(filterList());
 </script>

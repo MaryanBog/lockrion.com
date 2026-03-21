@@ -51,11 +51,10 @@
       </div>
     </div>
 
-    <div class="launch-notice">
-      🚀 The Lockrion Issuances Portal is launching soon.
-      Smart-contract deployments are in final preparation.
-      Public issuances will become available shortly.
-    </div>
+<div class="launch-notice">
+  🚀 Demo portal is live.
+  Issuance flows, wallet connection, and interface logic are available for preview.
+</div>
 
     <!-- ONE window, inside it: issuances-list.html -->
     <div class="panel" aria-label="Issuances list window">
@@ -81,7 +80,7 @@
 <script>
   const BACKEND = "https://fsm-claim-backend.onrender.com";
 
-  async function connectWallet() {
+  window.connectWallet = async function () {
     if (!window.solana || !window.solana.isPhantom) {
       alert("Install Phantom wallet");
       return null;
@@ -150,6 +149,13 @@
       btn.textContent = "Claim FSM";
     }
   };
+
+  window.addEventListener("load", () => {
+  const panel = document.querySelector(".panel");
+  if (panel) {
+    panel.scrollIntoView({ behavior: "smooth" });
+  }
+});
 </script>
 
 </body>
