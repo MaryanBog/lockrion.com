@@ -130,23 +130,23 @@ function canSettle(status){
 
 function esc(s){ return String(s || ""); }
 
-/* Toggle modal buttons by mode */
 function setModalMode(mode){
-  // reset all
   mdeposit.style.display = "none";
   mclaim.style.display = "none";
   mwithdraw.style.display = "none";
 
-  // disable by default
   mdeposit.disabled = true;
   mclaim.disabled = true;
   mwithdraw.disabled = true;
 
   if (mode === "deposit"){
     mdeposit.style.display = "inline-block";
+    mdeposit.disabled = false;
   } else if (mode === "settle"){
     mclaim.style.display = "inline-block";
     mwithdraw.style.display = "inline-block";
+    mclaim.disabled = false;
+    mwithdraw.disabled = false;
   }
 }
 
@@ -303,33 +303,19 @@ q.addEventListener("input", () => render(filterList()));
 mclose.addEventListener("click", closeModal);
 mb.addEventListener("click", (e) => { if (e.target === mb) closeModal(); });
 
-mdeposit.addEventListener("click", async () => {
+mdeposit.addEventListener("click", () => {
   mdeposit.disabled = true;
   mdeposit.textContent = "Processing...";
 
-  try {
-    if (window.parent && typeof window.parent.connectWallet === "function") {
-      const wallet = await window.parent.connectWallet();
-      if (!wallet) throw new Error("Wallet not connected");
-    } else {
-      throw new Error("Wallet connect is not available");
-    }
+  setTimeout(() => {
+    mdeposit.textContent = "Success ✅";
 
     setTimeout(() => {
-      mdeposit.textContent = "Success ✅";
-
-      setTimeout(() => {
-        mdeposit.textContent = "Deposit";
-        mdeposit.disabled = false;
-        closeModal();
-      }, 800);
-    }, 1000);
-
-  } catch (e) {
-    alert(e?.message || "Deposit failed");
-    mdeposit.disabled = false;
-    mdeposit.textContent = "Deposit";
-  }
+      mdeposit.textContent = "Deposit";
+      mdeposit.disabled = false;
+      closeModal();
+    }, 800);
+  }, 1000);
 });
 
 mclaim.addEventListener("click", async () => {
