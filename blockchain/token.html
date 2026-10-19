@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Lockrion Token — Lockrion</title>
+  <meta
+    name="description"
+    content="Lockrion Token explores fixed reward reserves, time-locked participation, and deterministic settlement on Solana."
+  >
+  <meta name="theme-color" content="#0B0F14">
+
+  <link rel="icon" type="image/png"
+        href="../icons/favicon-32x32.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header class="top">
+      <nav class="nav" aria-label="Main navigation">
+        <a href="../index.html">Lockrion</a>
+        <a href="#overview">Overview</a>
+        <a href="#principles">Principles</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="project-title">
+        <p>SOLANA · SMART-CONTRACT PROJECT</p>
+
+        <h1 id="project-title">Lockrion Token</h1>
+
+        <p class="sub">
+          Fixed reserves. Time-locked participation.
+          Deterministic rules.
+        </p>
+
+        <div class="buttons">
+          <a class="btn btn-primary" href="#overview">
+            About the project
+          </a>
+          <a
+            class="btn"
+            href="https://github.com/MaryanBog/Lockrion-Token"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View repository ↗
+          </a>
+        </div>
+      </section>
+
+      <section class="section" id="overview"
+               aria-labelledby="overview-title">
+        <h2 id="overview-title">Project overview</h2>
+
+        <p>
+          Lockrion explores a smart-contract model for reserve-backed
+          reward programs on Solana. Each program, called an issuance,
+          defines its reward reserve, participation period,
+          and settlement rules in advance.
+        </p>
+
+        <p>
+          The project documentation describes a model in which
+          participant deposits and reward funds are held separately,
+          and rewards follow predefined on-chain calculations.
+        </p>
+      </section>
+
+      <section class="section" id="principles"
+               aria-labelledby="principles-title">
+        <h2 id="principles-title">Design principles</h2>
+
+        <div class="grid">
+          <article class="card">
+            <h3>Fixed reward reserve</h3>
+            <p>
+              The documented model defines the total reward reserve
+              in advance and requires full funding before
+              participation begins.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Time-locked participation</h3>
+            <p>
+              Each issuance specifies a participation window
+              and maturity time. Deposit and withdrawal rules
+              are defined by the contract.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Deterministic settlement</h3>
+            <p>
+              Rewards are calculated from predefined rules
+              and on-chain state, using integer-based accounting
+              intended to produce reproducible results.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Separate escrow accounts</h3>
+            <p>
+              The architecture separates participant deposits
+              from the reward reserve and treats each issuance
+              as an independent instance.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="scope-title">
+        <h2 id="scope-title">Documentation &amp; implementation</h2>
+
+        <p>
+          These principles describe the project’s intended design.
+          The source repository provides implementation materials
+          for technical review.
+        </p>
+
+        <p>
+          This page is informational. It does not provide deposits,
+          reward claims, wallet connections, or a token sale.
+          It does not establish the audit status or immutability
+          of any deployed contract.
+        </p>
+      </section>
+
+      <section class="section" id="contact"
+               aria-labelledby="contact-title">
+        <h2 id="contact-title">Project inquiries</h2>
+
+        <p>
+          For questions about the project, its design,
+          or implementation materials, contact us.
+        </p>
+
+        <a href="mailto:support@lockrion.com?subject=Lockrion%20Token">
+          support@lockrion.com
+        </a>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2026 Lockrion. Independent digital product studio.</p>
+      <a href="../index.html#blockchain">Back to blockchain projects</a>
+    </footer>
+  </div>
+</body>
+</html>

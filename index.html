@@ -1,51 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K4BTZM0NNK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="icons/site.webmanifest">
 
-  gtag('config', 'G-K4BTZM0NNK');
-</script>
+  <title>Lockrion — Independent Digital Product Studio</title>
+  <meta
+    name="description"
+    content="Lockrion is an independent digital product studio building mobile apps and exploring blockchain technology."
+  >
+  <meta name="theme-color" content="#0B0F14">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lockrion</title>
+  <link rel="icon" type="image/png" sizes="32x32"
+        href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16"
+        href="icons/favicon-16x16.png">
+  <link rel="apple-touch-icon"
+        href="icons/apple-touch-icon.png">
 
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-<link rel="manifest" href="/icons/site.webmanifest">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-<div class="bg"></div>
+  <div class="bg" aria-hidden="true"></div>
 
-<div class="stage-index">
-  <div class="hero">
+  <div class="wrap">
+    <header class="top">
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#apps">Apps</a>
+        <a href="#blockchain">Blockchain</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
 
-    <iframe class="logo-frame" src="lockrion-logo.html" scrolling="no"></iframe>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <iframe
+          class="logo-frame"
+          src="lockrion-logo.html"
+          title="Lockrion studio logo"
+          tabindex="-1"
+        ></iframe>
 
-    <h1>Fixed Reserve. Time-Locked Commitments.</h1>
+        <p>INDEPENDENT DIGITAL PRODUCT STUDIO</p>
 
-    <p class="sub">
-      Fully funded reward reserves. Immutable smart-contract execution.
-      Deterministic distribution on Solana.
-    </p>
+        <h1 id="hero-title">Small studio. Bold ideas.</h1>
 
-    <div class="buttons">
-      <a href="issuances.html" class="hero-btn hero-btn-primary">Explore Issuances</a>
-      <a href="how.html" class="hero-btn hero-btn-secondary">How It Works</a>
-    </div>
+        <p class="sub">
+          We build mobile apps and explore blockchain technology.
+        </p>
+
+        <div class="buttons">
+          <a class="btn btn-primary" href="#apps">
+            Explore our apps
+          </a>
+          <a class="btn" href="#blockchain">
+            Blockchain projects
+          </a>
+        </div>
+      </section>
+
+      <section class="section" id="apps"
+               aria-labelledby="apps-title">
+        <h2 id="apps-title">Mobile apps</h2>
+
+        <p>
+          Apps for entertainment, expression, and shared experiences.
+        </p>
+
+        <div class="grid">
+          <article class="card" aria-labelledby="onlysex-title">
+            <p><small>18+ · IN TESTING</small></p>
+
+            <h3 id="onlysex-title">OnlySex</h3>
+
+            <p>
+              An adults-only party game for two or three consenting
+              players. Choose your level, take turns, and explore
+              playful challenges together.
+            </p>
+
+<p>
+  Currently being tested. Release details will follow.
+</p>
+
+<a class="btn" href="onlysex/index.html">
+  Explore OnlySex
+</a>
+          </article>
+
+          <article class="card" aria-labelledby="quipclip-title">
+            <p><small>IN DEVELOPMENT</small></p>
+
+            <h3 id="quipclip-title">QuipClip</h3>
+
+            <p>
+              Say it with a sound clip. An app in development
+              for sharing memorable phrases and audio reactions.
+            </p>
+
+            <p>Let movies do the talking.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="blockchain"
+               aria-labelledby="blockchain-title">
+        <h2 id="blockchain-title">Blockchain projects</h2>
+
+        <p>
+          A separate strand of our work, exploring tokens,
+          reserves, and smart-contract mechanisms on Solana.
+        </p>
+
+        <div class="grid">
+          <article class="card" aria-labelledby="token-title">
+            <p><small>SOLANA · SMART CONTRACTS</small></p>
+
+            <h3 id="token-title">Lockrion Token</h3>
+
+            <p>
+              A project exploring fully funded reward reserves,
+              time-locked participation, and deterministic
+              distribution through smart contracts.
+            </p>
+
+            <a class="btn" href="blockchain/token.html">
+  Explore project
+</a>
+          </article>
+
+          <article class="card" aria-labelledby="reserve-title">
+            <p><small>SOLANA · RESERVE PROJECT</small></p>
+
+            <h3 id="reserve-title">Lockrion Reserve</h3>
+
+            <p>
+              The reserve-focused branch of the Lockrion project,
+              previously presented through the Lockrion Reserve
+              dashboard.
+            </p>
+
+            <a class="btn" href="blockchain/reserve.html">
+  Explore project
+</a>
+          </article>
+        </div>
+
+        <p>
+          <small>
+            These project descriptions do not indicate that a public
+            service or token offering is currently available.
+            Current status and documentation will be provided
+            on each project’s dedicated page.
+          </small>
+        </p>
+      </section>
+
+      <section class="section" id="about"
+               aria-labelledby="about-title">
+        <h2 id="about-title">About Lockrion</h2>
+
+        <p>
+          Lockrion is an independent digital product studio.
+          Our work spans mobile apps and blockchain experiments,
+          with each project following its own purpose
+          and development path.
+        </p>
+
+        <p>
+          We turn ideas into working prototypes, test the details,
+          and develop them through practical feedback.
+        </p>
+      </section>
+
+      <section class="section" id="contact"
+               aria-labelledby="contact-title">
+        <h2 id="contact-title">Let’s talk</h2>
+
+        <p>
+          App support, testing feedback, project questions,
+          or collaboration ideas — get in touch.
+        </p>
+
+        <a href="mailto:support@lockrion.com">
+          support@lockrion.com
+        </a>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2026 Lockrion. Independent digital product studio.</p>
+      <a href="mailto:support@lockrion.com">Contact support</a>
+    </footer>
   </div>
-</div>
-
 </body>
 </html>

@@ -1,0 +1,135 @@
+/* Цвета из OnlySexTheme.kt */
+:root {
+  --bg: #12090f;
+  --fg: #ffffff;
+  --muted: #b9a7b0;
+  --surface: #21131b;
+  --accent: #ff3d7f;
+  --danger: #ff1744;
+  --border: rgba(255, 61, 127, .22);
+}
+
+/* Фон */
+.bg {
+  background:
+    radial-gradient(
+      ellipse at 50% 0,
+      rgba(255, 61, 127, .12),
+      transparent 65%
+    );
+}
+
+/* Навигация */
+.top {
+  margin-bottom: 20px;
+}
+
+.nav a:hover {
+  color: var(--accent);
+}
+
+a {
+  color: var(--accent);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline-color: var(--accent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--fg);
+}
+
+/* Первый экран */
+.hero {
+  max-width: 760px;
+  margin: auto;
+  padding: 16px 0 32px;
+}
+
+.hero > img {
+  width: 128px !important;
+  height: 128px;
+  margin: 0 auto 20px !important;
+  border-radius: 28px !important;
+}
+
+.hero h1 {
+  margin-bottom: 12px;
+  font-size: clamp(40px, 6vw, 64px);
+}
+
+.hero > p:first-of-type {
+  margin-bottom: 16px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .08em;
+}
+
+.hero .sub {
+  max-width: 620px;
+  margin-bottom: 24px;
+}
+
+.hero h1 + .sub {
+  color: var(--fg);
+  font-size: 22px;
+  line-height: 1.5;
+}
+
+/* Кнопки */
+.btn {
+  border-color: var(--accent);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.btn:hover {
+  background: rgba(255, 61, 127, .10);
+  color: var(--fg);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--fg);
+}
+
+.btn-primary:hover {
+  background: #e82e6d;
+  color: var(--fg);
+}
+
+/* Карточки */
+.card {
+  border-color: var(--border);
+  border-radius: 24px;
+  background: var(--surface);
+}
+
+.card h3 {
+  color: var(--accent);
+}
+
+footer {
+  border-color: var(--border);
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding-top: 8px;
+  }
+
+  .hero .sub {
+    font-size: 17px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
