@@ -69,9 +69,7 @@ p {
 }
 
 /* Шапка */
-.top,
-.nav,
-.buttons {
+.top, .nav, .buttons {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -120,7 +118,7 @@ p {
 
 .buttons { justify-content: center; }
 
-/* Симметричные кнопки hero */
+/* === ИСПРАВЛЕНИЕ 1: Симметричные кнопки hero === */
 .hero .buttons {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -173,7 +171,7 @@ p {
   gap: 24px;
 }
 
-/* Карточки */
+/* === ИСПРАВЛЕНИЕ 2: Карточки и прижатие кнопок === */
 .card {
   min-width: 0;
   padding: 28px;
