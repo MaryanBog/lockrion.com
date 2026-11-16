@@ -126,7 +126,7 @@ p {
   max-width: 520px;
   margin: 0 auto;
 }
-.hero .buttons .btn { width: 100%; }
+.hero .buttons .btn { width: 100%; max-width: none; }
 
 /* Кнопки */
 .btn {
