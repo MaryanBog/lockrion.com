@@ -202,3 +202,74 @@ footer {
   .hero { padding: 24px 0; }
   .card { padding: 20px; }
 }
+
+/* Hullhaven page */
+.cover {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  margin: 0 auto 28px;
+}
+.shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.shot {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .03);
+  overflow: hidden;
+}
+.shot img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+.shot figcaption {
+  padding: 16px 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.shot figcaption strong {
+  display: block;
+  color: var(--fg);
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+@media (max-width: 700px) {
+  .shots { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Hero logo (inline SVG fallback) */
+.logo-frame {
+  display: block;
+  width: 420px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 40px;
+}
+/* Symmetric hero buttons */
+.hero .buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.hero .buttons .btn { width: 100%; }
+@media (max-width: 700px) {
+  .hero .buttons { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Выравнивание кнопок в карточках по нижнему краю */
+.card {
+  display: flex;
+  flex-direction: column;
+}
+.card .btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
