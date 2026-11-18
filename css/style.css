@@ -186,6 +186,7 @@ p {
   width: auto;
   max-width: fit-content;
   transition: all 0.2s ease;
+  will-change: transform; /* <-- ДОБАВИТЬ ЭТУ СТРОКУ */
 }
 
 .btn:hover {
@@ -226,6 +227,7 @@ p {
   display: flex;
   flex-direction: column;
   transition: border-color 0.2s ease, transform 0.2s ease;
+  will-change: transform; /* <-- ДОБАВИТЬ ЭТУ СТРОКУ */
 }
 
 .card:hover {
