@@ -1,4 +1,6 @@
-/* Цвета */
+/* =========================================
+   1. ПЕРЕМЕННЫЕ И БАЗА
+   ========================================= */
 :root {
   color-scheme: dark;
   --bg: #0b0f14;
@@ -6,27 +8,49 @@
   --muted: #9aa4b2;
   --cyan: #00e5ff;
   --indigo: #6c63ff;
-  --border: rgba(255, 255, 255, .10);
+  --border: rgba(255, 255, 255, 0.10);
 }
 
-/* Основа */
-* { box-sizing: border-box; }
+* { 
+  box-sizing: border-box; 
+}
+
+html {
+  scroll-behavior: smooth; /* Плавная прокрутка к якорям (#features, #gallery) */
+}
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 16px/1.7 Inter, system-ui, sans-serif;
+  font: 16px/1.7 Inter, system-ui, -apple-system, sans-serif;
   overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased; /* Сглаживание шрифтов на macOS */
 }
 
-a { color: var(--cyan); }
-a:hover { color: var(--fg); }
+/* Кастомное выделение текста под стиль сайта */
+::selection {
+  background: rgba(0, 229, 255, 0.2);
+  color: var(--cyan);
+}
+
+/* =========================================
+   2. ТИПОГРАФИКА И ССЫЛКИ
+   ========================================= */
+a { 
+  color: var(--cyan); 
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+a:hover { 
+  color: var(--fg); 
+}
 
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 4px;
+  border-radius: 4px;
 }
 
 img {
@@ -39,6 +63,7 @@ h1, h2, h3 {
   margin: 0 0 16px;
   font-weight: 600;
   line-height: 1.2;
+  color: var(--fg);
 }
 
 h1 { font-size: clamp(32px, 5vw, 56px); }
@@ -50,15 +75,18 @@ p {
   color: var(--muted);
 }
 
-/* Градиентный фон */
+/* =========================================
+   3. ФОН И ОБЁРТКА
+   ========================================= */
 .bg {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  z-index: -1;
   background:
-    radial-gradient(900px 500px at 20% 20%, rgba(0, 229, 255, .12), transparent 60%),
-    radial-gradient(900px 500px at 80% 70%, rgba(108, 99, 255, .12), transparent 60%);
-  opacity: .95;
+    radial-gradient(900px 500px at 20% 20%, rgba(0, 229, 255, 0.12), transparent 60%),
+    radial-gradient(900px 500px at 80% 70%, rgba(108, 99, 255, 0.12), transparent 60%);
+  opacity: 0.95;
 }
 
 .wrap {
@@ -68,7 +96,9 @@ p {
   padding: 32px 24px;
 }
 
-/* Шапка */
+/* =========================================
+   4. ШАПКА И НАВИГАЦИЯ
+   ========================================= */
 .top, .nav, .buttons {
   display: flex;
   align-items: center;
@@ -83,10 +113,14 @@ p {
 
 .nav a {
   color: var(--muted);
-  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
 }
-.nav a:hover { color: var(--fg); }
+.nav a:hover { 
+  color: var(--fg); 
+}
 
+/* (Оставлено на будущее, если добавишь лого в шапку) */
 .logo-mini {
   width: 220px;
   max-width: 100%;
@@ -94,7 +128,9 @@ p {
   border: 0;
 }
 
-/* Главный баннер */
+/* =========================================
+   5. ГЛАВНЫЙ БАННЕР (HERO)
+   ========================================= */
 .hero {
   padding: 48px 0;
   text-align: center;
@@ -114,11 +150,10 @@ p {
   max-width: 720px;
   margin: 0 auto 28px;
   font-size: 18px;
+  line-height: 1.6;
 }
 
-.buttons { justify-content: center; }
-
-/* === ИСПРАВЛЕНИЕ 1: Симметричные кнопки hero === */
+/* Симметричные кнопки в Hero */
 .hero .buttons {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -126,30 +161,37 @@ p {
   max-width: 520px;
   margin: 0 auto;
 }
-.hero .buttons .btn { width: 100%; max-width: none; }
+.hero .buttons .btn { 
+  width: 100%; 
+  max-width: none; 
+}
 
-/* Кнопки */
+/* =========================================
+   6. КНОПКИ
+   ========================================= */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 48px;
   padding: 12px 24px;
-  border: 1px solid rgba(108, 99, 255, .55);
+  border: 1px solid rgba(108, 99, 255, 0.55);
   border-radius: 10px;
-  background: rgba(108, 99, 255, .06);
+  background: rgba(108, 99, 255, 0.06);
   color: #bebbff;
   font: inherit;
+  font-weight: 500;
   text-align: center;
-  text-decoration: none;
   cursor: pointer;
   width: auto;
   max-width: fit-content;
+  transition: all 0.2s ease;
 }
 
 .btn:hover {
-  background: rgba(108, 99, 255, .14);
+  background: rgba(108, 99, 255, 0.14);
   color: var(--fg);
+  transform: translateY(-1px);
 }
 
 .btn-primary {
@@ -162,8 +204,12 @@ p {
   color: #061015;
 }
 
-/* Секции */
-.section { margin-top: 48px; }
+/* =========================================
+   7. СЕКЦИИ И КАРТОЧКИ
+   ========================================= */
+.section { 
+  margin-top: 64px; /* Чуть больше воздуха между секциями */
+}
 
 .grid {
   display: grid;
@@ -171,22 +217,29 @@ p {
   gap: 24px;
 }
 
-/* === ИСПРАВЛЕНИЕ 2: Карточки и прижатие кнопок === */
 .card {
   min-width: 0;
   padding: 28px;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: rgba(255, 255, 255, .03);
+  background: rgba(255, 255, 255, 0.03);
   display: flex;
   flex-direction: column;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
+.card:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Гениальный трюк: прижимает кнопку к низу карточки, если тексты разной длины */
 .card .btn {
   margin-top: auto;
   align-self: flex-start;
 }
 
+/* (Оставлено на будущее для иконок приложений) */
 .app-icon {
   width: 80px;
   height: 80px;
@@ -195,12 +248,15 @@ p {
   object-fit: cover;
 }
 
-/* Hullhaven: обложка и галерея */
+/* =========================================
+   8. HULLHAVEN: ОБЛОЖКА И ГАЛЕРЕЯ
+   ========================================= */
 .cover {
   width: 100%;
   border-radius: 16px;
   border: 1px solid var(--border);
   margin: 0 auto 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .shots {
@@ -213,8 +269,13 @@ p {
   margin: 0;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: rgba(255, 255, 255, .03);
+  background: rgba(255, 255, 255, 0.03);
   overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.shot:hover {
+  border-color: rgba(0, 229, 255, 0.3);
 }
 
 .shot img {
@@ -228,6 +289,7 @@ p {
   padding: 16px 20px;
   color: var(--muted);
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .shot figcaption strong {
@@ -237,22 +299,35 @@ p {
   margin-bottom: 6px;
 }
 
-/* Подвал */
+/* =========================================
+   9. ПОДВАЛ
+   ========================================= */
 footer {
-  margin-top: 56px;
+  margin-top: 80px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
   color: var(--muted);
   font-size: 13px;
   text-align: center;
+  line-height: 1.6;
 }
 
-/* Телефоны */
+/* =========================================
+   10. АДАПТИВ (МОБИЛЬНЫЕ УСТРОЙСТВА)
+   ========================================= */
 @media (max-width: 700px) {
   .grid { grid-template-columns: minmax(0, 1fr); }
   .shots { grid-template-columns: minmax(0, 1fr); }
-  .top, .nav { justify-content: center; }
+  
+  .top, .nav { 
+    justify-content: center; 
+    gap: 12px;
+  }
+  
   .hero { padding: 24px 0; }
   .hero .buttons { grid-template-columns: minmax(0, 1fr); }
+  
   .card { padding: 20px; }
+  .section { margin-top: 48px; }
+  footer { margin-top: 48px; }
 }

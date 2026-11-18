@@ -1,4 +1,9 @@
-/* Цвета из OnlySexTheme.kt */
+/* =========================================
+   ONLYSEX THEME OVERRIDES
+   Наследует базу из ../css/style.css, 
+   меняя только цвета и специфичные отступы
+   ========================================= */
+
 :root {
   --bg: #12090f;
   --fg: #ffffff;
@@ -6,24 +11,19 @@
   --surface: #21131b;
   --accent: #ff3d7f;
   --danger: #ff1744;
-  --border: rgba(255, 61, 127, .22);
+  --border: rgba(255, 61, 127, 0.22);
 }
 
-/* Фон */
+/* Фон: мягкое розовое свечение сверху */
 .bg {
-  background:
-    radial-gradient(
-      ellipse at 50% 0,
-      rgba(255, 61, 127, .12),
-      transparent 65%
-    );
+  background: radial-gradient(
+    ellipse at 50% 0,
+    rgba(255, 61, 127, 0.12),
+    transparent 65%
+  );
 }
 
-/* Навигация */
-.top {
-  margin-bottom: 20px;
-}
-
+/* Навигация и ссылки */
 .nav a:hover {
   color: var(--accent);
 }
@@ -42,18 +42,20 @@ button:focus-visible {
   color: var(--fg);
 }
 
-/* Первый экран */
+/* Hero секция */
 .hero {
   max-width: 760px;
   margin: auto;
   padding: 16px 0 32px;
 }
 
-.hero > img {
-  width: 128px !important;
+/* Логотип приложения (вместо !important) */
+.hero .app-logo {
+  width: 128px;
   height: 128px;
-  margin: 0 auto 20px !important;
-  border-radius: 28px !important;
+  margin: 0 auto 20px;
+  border-radius: 28px;
+  box-shadow: 0 8px 24px rgba(255, 61, 127, 0.2);
 }
 
 .hero h1 {
@@ -61,23 +63,25 @@ button:focus-visible {
   font-size: clamp(40px, 6vw, 64px);
 }
 
-.hero > p:first-of-type {
+.hero .age-warning {
   margin-bottom: 16px;
   color: var(--accent);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero .tagline {
+  color: var(--fg);
+  font-size: 22px;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
 .hero .sub {
   max-width: 620px;
   margin-bottom: 24px;
-}
-
-.hero h1 + .sub {
-  color: var(--fg);
-  font-size: 22px;
-  line-height: 1.5;
 }
 
 /* Кнопки */
@@ -90,17 +94,19 @@ button:focus-visible {
 }
 
 .btn:hover {
-  background: rgba(255, 61, 127, .10);
+  background: rgba(255, 61, 127, 0.10);
   color: var(--fg);
 }
 
 .btn-primary {
   background: var(--accent);
   color: var(--fg);
+  border-color: var(--accent);
 }
 
 .btn-primary:hover {
   background: #e82e6d;
+  border-color: #e82e6d;
   color: var(--fg);
 }
 
@@ -115,21 +121,41 @@ button:focus-visible {
   color: var(--accent);
 }
 
+/* Галерея скриншотов: используем базовый класс .shots из style.css, 
+   но адаптируем под вертикальные скриншоты телефона */
+.shots {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.shot img {
+  aspect-ratio: 9 / 16; /* Вертикальный формат для скриншотов мобильного приложения */
+  object-fit: cover;
+}
+
+/* Подвал */
 footer {
   border-color: var(--border);
 }
 
+/* Мобильный адаптив */
 @media (max-width: 700px) {
   .hero {
     padding-top: 8px;
   }
 
+  .hero .tagline,
   .hero .sub {
     font-size: 17px;
   }
 
-  .buttons {
+  .hero .buttons {
     flex-direction: column;
     align-items: stretch;
+    display: flex; /* Переопределяем grid из базового style.css для мобилок */
+  }
+  
+  .hero .buttons .btn {
+    width: 100%;
   }
 }
