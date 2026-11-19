@@ -186,7 +186,7 @@ p {
   width: auto;
   max-width: fit-content;
   transition: all 0.2s ease;
-  will-change: transform; /* <-- ДОБАВИТЬ ЭТУ СТРОКУ */
+  will-change: transform;
 }
 
 .btn:hover {
@@ -209,7 +209,7 @@ p {
    7. СЕКЦИИ И КАРТОЧКИ
    ========================================= */
 .section { 
-  margin-top: 64px; /* Чуть больше воздуха между секциями */
+  margin-top: 64px;
 }
 
 .grid {
@@ -227,7 +227,7 @@ p {
   display: flex;
   flex-direction: column;
   transition: border-color 0.2s ease, transform 0.2s ease;
-  will-change: transform; /* <-- ДОБАВИТЬ ЭТУ СТРОКУ */
+  will-change: transform;
 }
 
 .card:hover {
@@ -344,4 +344,32 @@ footer {
   padding: 10px 16px;
   font-size: 14px;
   white-space: nowrap;
+}
+
+.shot--vertical img {
+  aspect-ratio: 9 / 19.5;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* =========================================
+   ИСПРАВЛЕННЫЙ БАННЕР HULLHAVEN
+   ========================================= */
+.card-banner {
+  width: calc(100% + 56px);
+  max-width: none;
+  margin: -28px -28px 24px -28px;
+  aspect-ratio: 16 / 9; /* Изменено с 21/9 */
+  object-fit: contain; /* Изменено с cover — картинка не обрезается */
+  background: #0b0f14; /* Тёмный фон, если останутся пустые поля */
+  border-bottom: 1px solid var(--border);
+  border-radius: 15px 15px 0 0;
+}
+
+@media (max-width: 700px) {
+  .card-banner {
+    width: calc(100% + 40px);
+    margin: -20px -20px 20px -20px;
+    aspect-ratio: 16 / 9;
+  }
 }

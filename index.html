@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <title>Lockrion — Independent Digital Product Studio</title>
-  <meta name="description" content="Lockrion is an independent digital product studio. We build mobile apps, desktop games, and explore blockchain technology. Home of Hullhaven and OnlySex.">
+  <meta name="description" content="Lockrion is an independent digital product studio. We build a desktop strategy game, mobile apps, and explore blockchain technology.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://lockrion.com/">
 
@@ -13,14 +12,14 @@
   <meta property="og:site_name" content="Lockrion">
   <meta property="og:url" content="https://lockrion.com/">
   <meta property="og:title" content="Lockrion — Independent Digital Product Studio">
-  <meta property="og:description" content="We build mobile apps, desktop games, and explore blockchain technology. Each project follows its own purpose and development path.">
-  <meta property="og:image" content="https://lockrion.com/icons/logo_L.png">
+  <meta property="og:description" content="We build a desktop strategy game, mobile apps, and explore blockchain technology.">
+  <meta property="og:image" content="https://lockrion.com/banner.webp">
   <meta property="og:locale" content="en_US">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lockrion — Independent Digital Product Studio">
-  <meta name="twitter:description" content="We build mobile apps, desktop games, and explore blockchain technology.">
-  <meta name="twitter:image" content="https://lockrion.com/icons/logo_L.png">
+  <meta name="twitter:description" content="We build a desktop strategy game, mobile apps, and explore blockchain technology.">
+  <meta name="twitter:image" content="https://lockrion.com/banner.webp">
 
   <meta name="theme-color" content="#050a14">
   <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
@@ -30,13 +29,22 @@
   <link rel="manifest" href="icons/site.webmanifest">
 
   <link rel="stylesheet" href="css/style.css">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K4BTZM0NNK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-K4BTZM0NNK');
+  </script>
 </head>
 <body>
   <div class="bg"></div>
   <div class="wrap">
 
     <header class="top">
-      <nav class="nav">
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#game">Game</a>
         <a href="#apps">Apps</a>
         <a href="#blockchain">Blockchain</a>
         <a href="#about">About</a>
@@ -44,59 +52,98 @@
       </nav>
     </header>
 
-    <!-- ДОБАВЛЕН ТЕГ <main> -->
     <main>
       <section class="hero">
-        <!-- ДОБАВЛЕНЫ title И alt ДЛЯ ЛОГОТИПА -->
         <object data="lockrion-logo.html" type="text/html" class="logo-frame" title="Lockrion Logo">
           <img src="icons/logo_L.png" alt="Lockrion Logo">
         </object>
         <p class="sub">
-          We build mobile apps, desktop games, and explore blockchain technology.
+          We build a desktop strategy game, mobile apps, and explore blockchain technology.
           Each project follows its own purpose and development path.
         </p>
         <div class="buttons">
-          <a href="#apps" class="btn btn-primary">Explore our apps</a>
-          <a href="#blockchain" class="btn">Blockchain projects</a>
+          <a href="#game" class="btn btn-primary">Explore the game</a>
+          <a href="#apps" class="btn">Our apps</a>
         </div>
       </section>
 
+      <!-- ===== GAME ===== -->
+      <section class="section" id="game">
+        <h2>Game</h2>
+        <p>
+          Our flagship title. A turn-based tactical space strategy built with
+          Kotlin Multiplatform and Compose Multiplatform.
+        </p>
+        <article class="card">
+          <!-- БАННЕР HULLHAVEN -->
+          <img src="banner.webp" alt="Hullhaven Banner" class="card-banner">
+          
+          <div class="tag">FLAGSHIP · DESKTOP · VERSION 1.0 IN DEVELOPMENT</div>
+          <h3>Hullhaven</h3>
+          <p>
+            Hex-grid combat on a 24×24 field, macro-economy with 24 resources,
+            eight unique factions, 57 named shuttles and a map editor up to 216×216.
+          </p>
+          <a href="hullhaven/" class="btn">Explore Hullhaven</a>
+        </article>
+      </section>
+
+      <!-- ===== APPS ===== -->
       <section class="section" id="apps">
-        <h2>Apps &amp; Games</h2>
-        <p>Mobile apps and desktop games built with Kotlin Multiplatform and Compose Multiplatform.</p>
+        <h2>Apps</h2>
+        <p>
+          Two mobile apps built alongside the game — a party game for adults
+          and a promo card game set in the Hullhaven universe.
+        </p>
         <div class="grid">
-          <div class="card">
-            <div class="tag">18+ · IN CLOSED TESTING</div>
+          <article class="card">
+            <!-- ИКОНКА ONLYSEX -->
+            <img src="onlysex_icno.webp" alt="OnlySex Icon" class="app-icon">
+            
+            <div class="tag">18+ · MOBILE APP · IN CLOSED TESTING</div>
             <h3>OnlySex</h3>
-            <p>An adults-only party game for two or three consenting players. Choose your level, take turns, and explore playful challenges together.</p>
+            <p>
+              An adults-only party game for two or three consenting players.
+              Choose your level, take turns, and explore playful challenges together.
+            </p>
             <p>Currently undergoing closed testing on Google Play.</p>
-            <a href="onlysex/index.html" class="btn">Explore OnlySex</a>
-          </div>
-          <div class="card">
-            <div class="tag">DESKTOP · STRATEGY · VERSION 1.0 IN DEVELOPMENT</div>
-            <h3>Hullhaven</h3>
-            <p>Turn-based tactical space strategy. Hex-grid combat on a 24×24 field, macro-economy with 24 resources, eight unique factions, 57 named shuttles and a map editor up to 216×216.</p>
-            <a href="hullhaven/index.html" class="btn">Explore Hullhaven</a>
-          </div>
+            <a href="onlysex/" class="btn">Explore OnlySex</a>
+          </article>
+
+          <article class="card">
+            <!-- ИКОНКА SKIRMISH -->
+            <img src="android-chrome-512x512.webp" alt="Skirmish Icon" class="app-icon">
+            
+            <div class="tag">PROMO CARD GAME · MOBILE APP · VERSION 1.3</div>
+            <h3>Hullhaven: Skirmish</h3>
+            <p>
+              A fast promo card game set in the Hullhaven universe. A shared
+              151-card deck, eight factions, trump mechanics and Credit-based
+              scoring. First to 5000 Credits wins a Trophy.
+            </p>
+            <a href="skirmish/skirmish.html" class="btn">Explore Skirmish</a>
+          </article>
         </div>
       </section>
 
+      <!-- ===== BLOCKCHAIN ===== -->
       <section class="section" id="blockchain">
         <h2>Blockchain projects</h2>
         <p>A separate strand of our work, exploring tokens, reserves, and smart-contract mechanisms on Solana.</p>
         <div class="grid">
-          <div class="card">
+          <article class="card">
             <div class="tag">SOLANA · SMART CONTRACTS</div>
             <h3>Lockrion Token</h3>
             <p>A project exploring fully funded reward reserves, time-locked participation, and deterministic distribution through smart contracts.</p>
             <a href="blockchain/token.html" class="btn">Explore project</a>
-          </div>
-          <div class="card">
+          </article>
+
+          <article class="card">
             <div class="tag">SOLANA · RESERVE PROJECT</div>
             <h3>Lockrion Reserve</h3>
             <p>The reserve-focused branch of the Lockrion project, previously presented through the Lockrion Reserve dashboard.</p>
             <a href="blockchain/reserve.html" class="btn">Explore project</a>
-          </div>
+          </article>
         </div>
         <p style="margin-top: 24px; font-size: 14px; color: var(--muted);">
           These project descriptions do not indicate that a public service or token offering is currently available.
@@ -104,23 +151,23 @@
         </p>
       </section>
 
+      <!-- ===== ABOUT ===== -->
       <section class="section" id="about">
         <h2>About Lockrion</h2>
-        <p>Lockrion is an independent digital product studio. Our work spans mobile apps, desktop games, and blockchain experiments, with each project following its own purpose and development path.</p>
+        <p>Lockrion is an independent digital product studio. Our work spans a desktop strategy game, mobile apps, and blockchain experiments, with each project following its own purpose and development path.</p>
         <p>We turn ideas into working prototypes, test the details, and develop them through practical feedback.</p>
       </section>
 
+      <!-- ===== CONTACT ===== -->
       <section class="section" id="contact">
         <h2>Let's talk</h2>
         <p>App support, testing feedback, project questions, or collaboration ideas — get in touch.</p>
         <a href="mailto:support@lockrion.com">support@lockrion.com</a>
       </section>
     </main>
-    <!-- ТЕГ <main> ЗАКРЫТ -->
 
     <footer>
-      © 2026 Lockrion. Independent digital product studio.
-      <br>
+      <p>© 2026 Lockrion. Independent digital product studio.</p>
       <a href="mailto:support@lockrion.com">Contact support</a>
     </footer>
 
